@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Paradox\App\main.cpp">
+    <ClCompile Include="src\App\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
