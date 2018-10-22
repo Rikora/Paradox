@@ -70,19 +70,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)/externals/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/src;$(ProjectDir)/externals/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)/externals/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)/externals/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/src;$(ProjectDir)/externals/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)/externals/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)/externals/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/src;$(ProjectDir)/externals/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)/externals/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)/externals/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)/src;$(ProjectDir)/externals/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)/externals/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -143,6 +143,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\App\main.cpp" />
+    <ClCompile Include="src\Engine\Paradox.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Engine\Paradox.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
