@@ -1,5 +1,6 @@
 #pragma once
 
+// SFML
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
@@ -15,7 +16,7 @@ namespace paradox
 
 	private:
 		void pollEvents();
-		void update(double dt);
+		void update(sf::Time dt);
 		void render();
 
 		sf::RenderWindow m_window;
