@@ -118,23 +118,47 @@ namespace paradox
 		// Update GUI
 		ImGui::SFML::Update(m_window, dt);
 
-		// Test dock layout
-		if (ImGui::Begin("Dock Demo"))
+		// Docking system
+		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+		const ImGuiWindowFlags flags = (ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
+										ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings |
+										ImGuiWindowFlags_NoTitleBar);
+		const float oldWindowRounding = ImGui::GetStyle().WindowRounding; ImGui::GetStyle().WindowRounding = 0;
+		const bool visible = ImGui::Begin("Docking system", nullptr, ImVec2(0, 0), 1.f, flags);
+		ImGui::GetStyle().WindowRounding = oldWindowRounding;
+		ImGui::SetWindowPos(ImVec2(0, 0));
+
+		if (visible)
 		{
 			ImGui::BeginDockspace();
 
-			if (ImGui::BeginDock("Dock 1")) {
-				ImGui::Text("I'm Wubugui!");
+			if (ImGui::BeginDock("Scene"))
+			{
 			}
 			ImGui::EndDock();
 
-			if (ImGui::BeginDock("Dock 2")) {
-				ImGui::Text("I'm BentleyBlanks!");
+			if (ImGui::BeginDock("Game"))
+			{
 			}
 			ImGui::EndDock();
 
-			if (ImGui::BeginDock("Dock 3")) {
-				ImGui::Text("I'm LonelyWaiting!");
+			if (ImGui::BeginDock("Inspector"))
+			{
+			}
+			ImGui::EndDock();
+
+			if (ImGui::BeginDock("Hierarchy"))
+			{
+			}
+			ImGui::EndDock();
+
+			if (ImGui::BeginDock("Project"))
+			{
+			}
+			ImGui::EndDock();
+
+			if (ImGui::BeginDock("Log"))
+			{
 			}
 			ImGui::EndDock();
 
