@@ -1,5 +1,10 @@
 #include <Engine/Paradox.hpp>
 
+// C++
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+
 // SFML
 #include <SFML/Window/Event.hpp>
 
@@ -8,13 +13,45 @@
 #include <imgui/imgui_dock.h>
 #include <imgui/imgui-SFML.h>
 
+// Json
+#include <json/json.hpp>
+
+using namespace nlohmann;
+
 namespace paradox
 {
 	const double dt = 1.0 / 60.0;
 
-	Paradox::Paradox() :
-	m_window(sf::VideoMode(800, 600), "Paradox")
+	Paradox::Paradox()
 	{
+		// Get settings for the current instance of the engine
+		json data;
+		std::ifstream handle;
+		std::ios_base::iostate exceptionMask = handle.exceptions() | std::ios::failbit;
+		handle.exceptions(exceptionMask);
+
+		try
+		{
+			handle.open("meta/paradox.ini");
+			handle >> data;
+			handle.close();
+		}
+		catch (const std::ios_base::failure& e)
+		{
+			std::cerr << "Error: Failed reading paradox.ini -> " << std::strerror(errno) << std::endl; // TODO: LOG to game console
+		}
+
+		if (!data.empty())
+		{
+			m_window.setPosition(sf::Vector2i(data["winPos"][0], data["winPos"][1]));
+			m_window.create(sf::VideoMode(data["winSize"][0], data["winSize"][1]), "Paradox");
+		}
+		else
+		{
+			// Create window with default settings
+			m_window.create(sf::VideoMode(800, 600), "Paradox");
+		}
+
 		// Temp
 		m_window.setVerticalSyncEnabled(true);
 
@@ -52,9 +89,25 @@ namespace paradox
 		{
 			ImGui::SFML::ProcessEvent(event);
 
+			// Resize
+			if (event.type == sf::Event::Resized)
+			{
+				sf::FloatRect viewArea(0.f, 0.f, static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+				m_window.setView(sf::View(viewArea));
+			}
+
 			// Exit application
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
 			{
+				// Dump settings file
+				json settings;
+				settings["winPos"] = { m_window.getPosition().x, m_window.getPosition().y };
+				settings["winSize"] = { m_window.getSize().x, m_window.getSize().y };
+
+				std::ofstream o("meta/paradox.ini");
+				o << std::setw(4) << settings << std::endl;
+				o.close();
+
 				m_window.close();
 			}
 		}

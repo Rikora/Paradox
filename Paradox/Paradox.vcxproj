@@ -147,11 +147,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\App\main.cpp" />
-    <ClCompile Include="src\Editor\ImGUI\imgui-SFML.cpp" />
-    <ClCompile Include="src\Editor\ImGUI\imgui.cpp" />
-    <ClCompile Include="src\Editor\ImGUI\imgui_dock.cpp" />
-    <ClCompile Include="src\Editor\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="src\Editor\Docking\imgui_dock.cpp" />
     <ClCompile Include="src\Engine\Paradox.cpp" />
+    <ClCompile Include="src\GUI\imgui-SFML.cpp" />
+    <ClCompile Include="src\GUI\imgui.cpp" />
+    <ClCompile Include="src\GUI\imgui_draw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Paradox.hpp" />
