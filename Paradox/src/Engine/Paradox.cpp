@@ -5,6 +5,9 @@
 #include <iomanip>
 #include <iostream>
 
+// Paradox
+#include <Editor/DebugLog.hpp>
+
 // SFML
 #include <SFML/Window/Event.hpp>
 
@@ -43,13 +46,18 @@ namespace paradox
 
 		if (!data.empty())
 		{
+			// Create engine instance from the file settings
 			m_window.setPosition(sf::Vector2i(data["winPos"][0], data["winPos"][1]));
 			m_window.create(sf::VideoMode(data["winSize"][0], data["winSize"][1]), "Paradox");
+			m_sceneWindow.create(data["sceneSize"][0], data["sceneSize"][1]);
+			m_gameWindow.create(data["gameSize"][0], data["gameSize"][1]);
 		}
 		else
 		{
-			// Create window with default settings
+			// Create engine instance with default settings
 			m_window.create(sf::VideoMode(800, 600), "Paradox");
+			m_sceneWindow.create(800, 600);
+			m_gameWindow.create(800, 600);
 		}
 
 		// Temp
@@ -62,6 +70,9 @@ namespace paradox
 		m_circle.setRadius(5.f);
 		m_circle.setPosition(sf::Vector2f(100.f, 100.f));
 		m_circle.setFillColor(sf::Color::Green);
+
+		g_debugLog.log("Hello world");
+		g_debugLog.log("Hello world again");
 	}
 
 	Paradox::~Paradox()
@@ -92,8 +103,8 @@ namespace paradox
 			// Resize
 			if (event.type == sf::Event::Resized)
 			{
-				sf::FloatRect viewArea(0.f, 0.f, static_cast<float>(event.size.width), static_cast<float>(event.size.height));
-				m_window.setView(sf::View(viewArea));
+				//sf::FloatRect viewArea(0.f, 0.f, static_cast<float>(event.size.width), static_cast<float>(event.size.height));
+				//m_window.setView(sf::View(viewArea));
 			}
 
 			// Exit application
@@ -103,6 +114,8 @@ namespace paradox
 				json settings;
 				settings["winPos"] = { m_window.getPosition().x, m_window.getPosition().y };
 				settings["winSize"] = { m_window.getSize().x, m_window.getSize().y };
+				settings["sceneSize"] = { m_sceneWindow.getSize().x, m_sceneWindow.getSize().y };
+				settings["gameSize"] = { m_gameWindow.getSize().x, m_gameWindow.getSize().y };
 
 				std::ofstream o("meta/paradox.ini");
 				o << std::setw(4) << settings << std::endl;
@@ -134,11 +147,45 @@ namespace paradox
 
 			if (ImGui::BeginDock("Scene"))
 			{
+				//m_isSceneHovered = ImGui::IsItemHovered();
+				ImVec2 size = ImGui::GetContentRegionAvail();
+
+				// Re-create scene texture if the window sizes doesn't match
+				if (m_sceneWindow.getSize() != sf::Vector2u(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y)))
+				{
+					m_sceneWindow.create(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y));
+				}
+
+				// Render to texture
+				m_sceneWindow.clear(sf::Color::Black); // Should be able to be set
+				
+				// Render to scene window goes here...
+
+				m_sceneWindow.display();
+
+				ImGui::Image(m_sceneWindow.getTexture());
 			}
 			ImGui::EndDock();
 
 			if (ImGui::BeginDock("Game"))
 			{
+				//m_isGameSceneHovered = ImGui::IsItemHovered();
+				ImVec2 size = ImGui::GetContentRegionAvail();
+
+				// Re-create game-scene texture if the window sizes doesn't match
+				if (m_gameWindow.getSize() != sf::Vector2u(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y)))
+				{
+					m_gameWindow.create(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y));
+				}
+
+				// Render to texture
+				m_gameWindow.clear(sf::Color::Black); // Should be able to be set
+
+				// Render to game window goes here...
+
+				m_gameWindow.display();
+
+				ImGui::Image(m_gameWindow.getTexture());
 			}
 			ImGui::EndDock();
 
@@ -159,6 +206,9 @@ namespace paradox
 
 			if (ImGui::BeginDock("Log"))
 			{
+				g_debugLog.draw();
+
+				ImGui::Separator();
 			}
 			ImGui::EndDock();
 
@@ -170,9 +220,8 @@ namespace paradox
 	void Paradox::render()
 	{
 		m_window.clear();
-		m_window.draw(m_circle);
 
-		// Render GUI
+		// Render GUI in the application window
 		ImGui::SFML::Render(m_window);
 
 		m_window.display();

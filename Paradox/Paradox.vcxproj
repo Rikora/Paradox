@@ -158,6 +158,7 @@
     <ClCompile Include="src\GUI\imgui_draw.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Editor\DebugLog.hpp" />
     <ClInclude Include="src\Engine\Paradox.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
