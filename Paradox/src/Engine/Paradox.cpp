@@ -60,19 +60,16 @@ namespace paradox
 			m_gameWindow.create(800, 600);
 		}
 
-		// Temp
+		// Temp -> replace with setFramerateLimit?
 		m_window.setVerticalSyncEnabled(true);
 
 		// Init GUI
 		ImGui::SFML::Init(m_window);
 		ImGui::InitDock();
 
-		m_circle.setRadius(5.f);
-		m_circle.setPosition(sf::Vector2f(100.f, 100.f));
-		m_circle.setFillColor(sf::Color::Green);
-
-		g_debugLog.log("Hello world");
-		g_debugLog.log("Hello world again");
+		// Log test
+		DebugLog::log("Hello world");
+		DebugLog::log("Hello world again");
 	}
 
 	Paradox::~Paradox()
@@ -99,13 +96,6 @@ namespace paradox
 		while (m_window.pollEvent(event))
 		{
 			ImGui::SFML::ProcessEvent(event);
-
-			// Resize
-			if (event.type == sf::Event::Resized)
-			{
-				//sf::FloatRect viewArea(0.f, 0.f, static_cast<float>(event.size.width), static_cast<float>(event.size.height));
-				//m_window.setView(sf::View(viewArea));
-			}
 
 			// Exit application
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
@@ -157,7 +147,7 @@ namespace paradox
 				}
 
 				// Render to texture
-				m_sceneWindow.clear(sf::Color::Black); // Should be able to be set
+				m_sceneWindow.clear(sf::Color::Black); // Should be able to be set by the user
 				
 				// Render to scene window goes here...
 
@@ -179,7 +169,7 @@ namespace paradox
 				}
 
 				// Render to texture
-				m_gameWindow.clear(sf::Color::Black); // Should be able to be set
+				m_gameWindow.clear(sf::Color::Black); // Should be able to be set by the user
 
 				// Render to game window goes here...
 
@@ -206,7 +196,7 @@ namespace paradox
 
 			if (ImGui::BeginDock("Log"))
 			{
-				g_debugLog.draw();
+				DebugLog::draw();
 
 				ImGui::Separator();
 			}

@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\App\main.cpp" />
+    <ClCompile Include="src\Editor\DebugLog.cpp" />
     <ClCompile Include="src\Editor\Docking\imgui_dock.cpp" />
     <ClCompile Include="src\Engine\Paradox.cpp" />
     <ClCompile Include="src\GUI\imgui-SFML.cpp" />

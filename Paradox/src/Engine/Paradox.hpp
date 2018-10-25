@@ -21,7 +21,6 @@ namespace paradox
 		void render();
 
 		sf::RenderWindow m_window;
-		sf::CircleShape m_circle;
 		sf::RenderTexture m_sceneWindow;
 		sf::RenderTexture m_gameWindow;
 	};
