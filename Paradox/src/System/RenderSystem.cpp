@@ -4,13 +4,13 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 // Paradox
-#include <System/Component/ShapeRender.hpp>
+#include <System/Component/ShapeRenderer.hpp>
 
 namespace paradox
 {
 	void RenderSystem::update(entt::registry<unsigned>& registry, sf::RenderTarget& target)
 	{
-		auto view = registry.view<ShapeRender>();
+		auto view = registry.view<ShapeRenderer>();
 
 		for (const auto& entity : view)
 		{

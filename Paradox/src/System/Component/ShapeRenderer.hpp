@@ -8,9 +8,9 @@
 
 namespace paradox
 {
-	struct ShapeRender
+	struct ShapeRenderer
 	{
-		explicit ShapeRender(std::unique_ptr<sf::Shape> shape) :
+		explicit ShapeRenderer(std::unique_ptr<sf::Shape> shape) :
 		shape(std::move(shape))
 		{
 		}

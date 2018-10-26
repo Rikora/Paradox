@@ -7,7 +7,7 @@
 
 // Paradox
 #include <Editor/DebugLog.hpp>
-#include <System/Component/ShapeRender.hpp> //
+#include <System/Component/ShapeRenderer.hpp> //
 #include <System/Component/Transform.hpp> //
 
 // SFML
@@ -78,7 +78,7 @@ namespace paradox
 		auto entity = m_registry.create();
 		auto shape = std::make_unique<sf::CircleShape>(5.f);
 		shape->setFillColor(sf::Color::Green);
-		m_registry.assign<ShapeRender>(entity, std::move(shape));
+		m_registry.assign<ShapeRenderer>(entity, std::move(shape));
 		m_registry.assign<Transform>(entity, sf::Vector2f(200.f, 200.f));
 	}
 

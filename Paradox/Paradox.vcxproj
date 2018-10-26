@@ -163,7 +163,7 @@
   <ItemGroup>
     <ClInclude Include="src\Editor\DebugLog.hpp" />
     <ClInclude Include="src\Engine\Paradox.hpp" />
-    <ClInclude Include="src\System\Component\ShapeRender.hpp" />
+    <ClInclude Include="src\System\Component\ShapeRenderer.hpp" />
     <ClInclude Include="src\System\Component\Transform.hpp" />
     <ClInclude Include="src\System\RenderSystem.hpp" />
     <ClInclude Include="src\System\TransformSystem.hpp" />
