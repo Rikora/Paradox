@@ -7,9 +7,12 @@
 
 // Paradox
 #include <Editor/DebugLog.hpp>
+#include <System/Component/ShapeRender.hpp> //
+#include <System/Component/Transform.hpp> //
 
 // SFML
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 
 // ImGUI
 #include <imgui/imgui.h>
@@ -70,6 +73,13 @@ namespace paradox
 		// Log test
 		DebugLog::log("Hello world");
 		DebugLog::log("Hello world again");
+
+		// Create an entity
+		auto entity = m_registry.create();
+		auto shape = std::make_unique<sf::CircleShape>(5.f);
+		shape->setFillColor(sf::Color::Green);
+		m_registry.assign<ShapeRender>(entity, std::move(shape));
+		m_registry.assign<Transform>(entity, sf::Vector2f(200.f, 200.f));
 	}
 
 	Paradox::~Paradox()
@@ -85,6 +95,7 @@ namespace paradox
 		{
 			pollEvents();
 			update(clock.restart());
+			updateGUI(clock.restart());
 			render();
 		}
 	}
@@ -118,6 +129,12 @@ namespace paradox
 
 	void Paradox::update(sf::Time dt)
 	{
+		// Update transformations of all entities
+		m_transformSystem.update(m_registry);
+	}
+
+	void Paradox::updateGUI(sf::Time dt)
+	{
 		// Update GUI
 		ImGui::SFML::Update(m_window, dt);
 
@@ -150,6 +167,7 @@ namespace paradox
 				m_sceneWindow.clear(sf::Color::Black); // Should be able to be set by the user
 				
 				// Render to scene window goes here...
+				m_renderSystem.update(m_registry, m_sceneWindow);
 
 				m_sceneWindow.display();
 

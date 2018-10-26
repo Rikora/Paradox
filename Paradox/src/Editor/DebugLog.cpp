@@ -12,6 +12,7 @@ namespace paradox
 	void DebugLog::log(const char * fmt, ...)
 	{
 		// TODO: Ignore \n from user input or else the console layout will be a disaster
+		// TODO: Change the default font for the console
 
 		// Add a new line to the log message
 		std::string s(fmt);
@@ -44,7 +45,7 @@ namespace paradox
 		ImGui::Separator();
 		ImGui::Spacing();
 
-		ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar); // Horizontal scroll not really needed?	
+		ImGui::BeginChild("Scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar); // Horizontal scroll not really needed?	
 		ImGui::TextUnformatted(m_buffer.begin());
 
 		if (m_scrollToBottom)

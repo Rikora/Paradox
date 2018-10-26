@@ -157,10 +157,16 @@
     <ClCompile Include="src\GUI\imgui-SFML.cpp" />
     <ClCompile Include="src\GUI\imgui.cpp" />
     <ClCompile Include="src\GUI\imgui_draw.cpp" />
+    <ClCompile Include="src\System\RenderSystem.cpp" />
+    <ClCompile Include="src\System\TransformSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor\DebugLog.hpp" />
     <ClInclude Include="src\Engine\Paradox.hpp" />
+    <ClInclude Include="src\System\Component\ShapeRender.hpp" />
+    <ClInclude Include="src\System\Component\Transform.hpp" />
+    <ClInclude Include="src\System\RenderSystem.hpp" />
+    <ClInclude Include="src\System\TransformSystem.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
