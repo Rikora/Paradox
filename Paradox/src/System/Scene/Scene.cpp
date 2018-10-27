@@ -11,6 +11,8 @@
 // Paradox
 #include <System/Logic/TransformSystem.hpp>
 #include <System/Logic/RenderSystem.hpp>
+#include <System/Component/ShapeRenderer.hpp>
+#include <System/Component/Transform.hpp>
 
 // Json
 #include <json/json.hpp>
@@ -59,7 +61,18 @@ namespace paradox
 
 	void Scene::saveScene()
 	{
-		// Any ability in entt to serialize entities directly?
+		// Dump settings file
+		json output;
+
+		/*settings["winPos"] = { m_window.getPosition().x, m_window.getPosition().y };
+		settings["winSize"] = { m_window.getSize().x, m_window.getSize().y };
+		settings["sceneSize"] = { m_sceneWindow.getSize().x, m_sceneWindow.getSize().y };
+		settings["gameSize"] = { m_gameWindow.getSize().x, m_gameWindow.getSize().y };
+
+		std::ofstream o("meta/paradox.ini");
+		o << std::setw(4) << settings << std::endl;
+		o.close();*/
+
 
 		// TODO: save all the scene data to disk
 	}
