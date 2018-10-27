@@ -83,7 +83,7 @@ namespace paradox
 		auto shape = std::make_unique<sf::CircleShape>(5.f);
 		shape->setFillColor(sf::Color::Green);
 		m_registry.assign<ShapeRenderer>(entity, std::move(shape));
-		m_registry.assign<Transform>(entity, sf::Vector2f(200.f, 200.f));
+		m_registry.assign<Transform>(entity, sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);
 	}
 
 	Paradox::~Paradox()
@@ -132,7 +132,7 @@ namespace paradox
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
 			{
 				// Serialization test
-				std::stringstream storage;
+				/*std::stringstream storage;
 				cereal::JSONOutputArchive output { storage };
 
 				m_registry.snapshot().
@@ -142,7 +142,7 @@ namespace paradox
 
 				std::ofstream p("meta/test1.json");
 				p << std::setw(4) << storage.rdbuf() << std::endl;
-				p.close();
+				p.close();*/
 
 
 				// Dump settings file
