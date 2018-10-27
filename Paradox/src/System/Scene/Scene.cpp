@@ -6,7 +6,9 @@
 #include <iostream>
 
 // SFML
-//#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 // Paradox
 #include <System/Logic/TransformSystem.hpp>
@@ -61,25 +63,55 @@ namespace paradox
 
 	void Scene::saveScene()
 	{
-		// Dump settings file
+		// Dump scene file
 		json output;
 
-		/*settings["winPos"] = { m_window.getPosition().x, m_window.getPosition().y };
-		settings["winSize"] = { m_window.getSize().x, m_window.getSize().y };
-		settings["sceneSize"] = { m_sceneWindow.getSize().x, m_sceneWindow.getSize().y };
-		settings["gameSize"] = { m_gameWindow.getSize().x, m_gameWindow.getSize().y };
+		output["size"] = m_entities.alive();
 
-		std::ofstream o("meta/paradox.ini");
-		o << std::setw(4) << settings << std::endl;
-		o.close();*/
+		auto view = m_entities.view<Transform, ShapeRenderer>(); // More components will follow here...
 
+		for (const auto& entity : view)
+		{
+			auto& transform = view.get<Transform>(entity);
 
-		// TODO: save all the scene data to disk
+			// The entity will always have a transform?
+			output["transform"] = transform.position.x;
+			output["transform"]["scale"] = { transform.scale.x, transform.scale.y };
+			output["transform"]["rotation"] = transform.rotation;
+
+			if (m_entities.has<ShapeRenderer>(entity))
+			{
+				auto& shapeRenderer = view.get<ShapeRenderer>(entity);
+
+				auto fillColor = shapeRenderer.shape->getFillColor();
+				output["shapeRenderer"]["color"] = { fillColor.r, fillColor.g, fillColor.b };
+
+				if (typeid(*shapeRenderer.shape.get()) == typeid(sf::CircleShape))
+				{
+					auto circle = dynamic_cast<sf::CircleShape*>(shapeRenderer.shape.get());
+
+					output["shapeRenderer"]["type"] = "Circle";
+					output["shapeRenderer"]["radius"] = circle->getRadius();
+
+				}
+				else if (typeid(*shapeRenderer.shape.get()) == typeid(sf::RectangleShape))
+				{
+					auto rect = dynamic_cast<sf::RectangleShape*>(shapeRenderer.shape.get());
+
+					output["shapeRenderer"]["type"] = "Rectangle";	
+					//
+				}
+			}		
+		}
+
+		std::ofstream o("meta/untitled.scene");
+		o << std::setw(4) << output << std::endl;
+		o.close();
 	}
 
 	void Scene::unloadScene()
 	{
-		// Loop over all entities in the current scene file and destroy them?
+		m_entities.destroy<Transform>();
 	}
 
 	void Scene::update()

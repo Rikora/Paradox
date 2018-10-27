@@ -13,7 +13,8 @@
 
 // SFML
 #include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/CircleShape.hpp> //
+#include <SFML/Graphics/RectangleShape.hpp> //
 
 // ImGUI
 #include <imgui/imgui.h>
@@ -22,9 +23,6 @@
 
 // Json
 #include <json/json.hpp>
-
-// Cereal
-#include <cereal/archives/json.hpp>
 
 using namespace nlohmann;
 
@@ -104,22 +102,6 @@ namespace paradox
 		}
 	}
 
-	template<typename Archive>
-	void serialize(Archive& archive, Transform& transform) 
-	{
-		archive(transform.position.x, transform.position.y);
-		archive(transform.scale.x, transform.scale.y);
-		archive(transform.rotation);
-	}
-
-	template<typename Archive>
-	void serialize(Archive& archive, ShapeRenderer& renderer)
-	{
-		/*archive(transform.position.x, transform.position.y);
-		archive(transform.scale.x, transform.scale.y);
-		archive(transform.rotation);*/
-	}
-
 	void Paradox::pollEvents()
 	{
 		sf::Event event;
@@ -131,20 +113,6 @@ namespace paradox
 			// Exit application
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
 			{
-				// Serialization test
-				/*std::stringstream storage;
-				cereal::JSONOutputArchive output { storage };
-
-				m_registry.snapshot().
-					entities(output).
-					destroyed(output).
-					component<Transform>(output);
-
-				std::ofstream p("meta/test1.json");
-				p << std::setw(4) << storage.rdbuf() << std::endl;
-				p.close();*/
-
-
 				// Dump settings file
 				json settings;
 				settings["winPos"] = { m_window.getPosition().x, m_window.getPosition().y };
