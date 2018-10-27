@@ -10,6 +10,6 @@ namespace paradox
 	public:
 		~TransformSystem() = default;
 
-		void update(entt::registry<unsigned>& registry);
+		void update(entt::registry<unsigned>& entities);
 	};
 }

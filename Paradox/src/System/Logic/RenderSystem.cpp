@@ -1,4 +1,4 @@
-#include <System/RenderSystem.hpp>
+#include <System/Logic/RenderSystem.hpp>
 
 // SFML
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -8,9 +8,9 @@
 
 namespace paradox
 {
-	void RenderSystem::update(entt::registry<unsigned>& registry, sf::RenderTarget& target)
+	void RenderSystem::update(entt::registry<unsigned>& entities, sf::RenderTarget& target)
 	{
-		auto view = registry.view<ShapeRenderer>();
+		auto view = entities.view<ShapeRenderer>();
 
 		for (const auto& entity : view)
 		{

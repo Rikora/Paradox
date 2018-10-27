@@ -16,6 +16,6 @@ namespace paradox
 	public:
 		~RenderSystem() = default;
 
-		void update(entt::registry<unsigned>& registry, sf::RenderTarget& target);
+		void update(entt::registry<unsigned>& entities, sf::RenderTarget& target);
 	};
 }

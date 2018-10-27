@@ -5,8 +5,8 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 
 // Paradox
-#include <System/RenderSystem.hpp>
-#include <System/TransformSystem.hpp>
+#include <System/Logic/RenderSystem.hpp>
+#include <System/Logic/TransformSystem.hpp>
 
 namespace paradox
 {

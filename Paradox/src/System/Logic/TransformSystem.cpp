@@ -1,4 +1,4 @@
-#include <System/TransformSystem.hpp>
+#include <System/Logic/TransformSystem.hpp>
 
 // Paradox
 #include <System/Component/ShapeRenderer.hpp>
@@ -6,9 +6,9 @@
 
 namespace paradox
 {
-	void TransformSystem::update(entt::registry<unsigned>& registry)
+	void TransformSystem::update(entt::registry<unsigned>& entities)
 	{
-		registry.view<ShapeRenderer, Transform>().each([](const auto, auto& render, auto& transform) 
+		entities.view<ShapeRenderer, Transform>().each([](const auto, auto& render, auto& transform)
 		{
 			render.shape->setPosition(transform.position);
 			render.shape->setScale(transform.scale);
