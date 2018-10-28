@@ -7,6 +7,7 @@
 // Paradox
 #include <System/Logic/RenderSystem.hpp>
 #include <System/Logic/TransformSystem.hpp>
+//#include <System/Scene/Scene.hpp>
 
 namespace paradox
 {
@@ -32,5 +33,6 @@ namespace paradox
 		entt::registry<unsigned> m_registry;
 		RenderSystem m_renderSystem;
 		TransformSystem m_transformSystem;
+		//Scene m_scene;
 	};
 }

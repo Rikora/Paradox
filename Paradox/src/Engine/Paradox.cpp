@@ -10,6 +10,7 @@
 #include <Editor/DebugLog.hpp>
 #include <System/Component/ShapeRenderer.hpp> //
 #include <System/Component/Transform.hpp> //
+//#include <System/Scene/SceneManager.hpp>
 
 // SFML
 #include <SFML/Window/Event.hpp>
@@ -113,6 +114,8 @@ namespace paradox
 			// Exit application
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
 			{
+				//m_scene.saveScene();
+
 				// Dump settings file
 				json settings;
 				settings["winPos"] = { m_window.getPosition().x, m_window.getPosition().y };

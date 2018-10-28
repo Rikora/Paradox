@@ -160,6 +160,7 @@
     <ClCompile Include="src\System\Logic\RenderSystem.cpp" />
     <ClCompile Include="src\System\Logic\TransformSystem.cpp" />
     <ClCompile Include="src\System\Scene\Scene.cpp" />
+    <ClCompile Include="src\System\Scene\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor\DebugLog.hpp" />
