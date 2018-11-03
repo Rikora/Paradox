@@ -6,6 +6,9 @@
 #include <iostream>
 #include <sstream>
 
+// Filesystem C++17 test
+#include <filesystem>
+
 // Paradox
 #include <Editor/DebugLog.hpp>
 #include <System/Scene/SceneManager.hpp>
@@ -26,9 +29,37 @@
 #define ENGINE_VERSION "1.0.0"
 
 using namespace nlohmann;
+namespace fs = std::filesystem;
 
 namespace paradox
 {
+	void DisplayFileInfo(std::string &lead, fs::path &filename)
+	{
+		std::cout << lead << filename << std::endl;
+	}
+
+	void DisplayDirectoryTreeImp(const fs::path& pathToShow, int level)
+	{
+		if (fs::exists(pathToShow) && fs::is_directory(pathToShow))
+		{
+			auto lead = std::string(level * 3, ' '); // Used for identation
+			for (const auto& entry : fs::directory_iterator(pathToShow))
+			{
+				auto filename = entry.path().filename();
+				if (fs::is_directory(entry.status()))
+				{
+					std::cout << lead << "[+] " << filename << "\n";
+					DisplayDirectoryTreeImp(entry, level + 1);
+					std::cout << "\n";
+				}
+				else if (fs::is_regular_file(entry.status()))
+					DisplayFileInfo(lead, filename);
+				else
+					std::cout << lead << " [?]" << filename << "\n";
+			}
+		}
+	}
+
 	const double dt = 1.0 / 60.0;
 
 	// TODO: check compiler extension (64-bit/32-bit)
@@ -79,6 +110,10 @@ namespace paradox
 		// Log test
 		DebugLog::log("Hello world");
 		DebugLog::log("Hello world again");
+
+		// Write contents of the meta folder with file system
+		const fs::path path = "E:/Paradox/Paradox/meta";
+		DisplayDirectoryTreeImp(path, 0);
 	}
 
 	Paradox::~Paradox()
