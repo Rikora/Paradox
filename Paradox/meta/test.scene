@@ -1,10 +1,13 @@
 {
     "scene": [
         {
+            "property": {
+                "name": "gameObject"
+            },
             "shapeRenderer": {
                 "color": [
-                    255,
                     0,
+                    255,
                     0
                 ],
                 "radius": 5.0,

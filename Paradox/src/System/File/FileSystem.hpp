@@ -38,7 +38,9 @@ namespace paradox
 
 				// Add input extension as the file format if missing
 				if (path.find(extension) == std::string::npos)
+				{
 					path.append(extension);
+				}
 
 				free(outPath);
 				return true;

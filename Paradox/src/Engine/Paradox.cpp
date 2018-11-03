@@ -194,7 +194,7 @@ namespace paradox
 		}
 
 		// Docking system
-		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize); // Change this when adding icon bar
+		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize); // Change this when adding icon menu bar
 		const ImGuiWindowFlags flags = (ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
 										ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings |
 										ImGuiWindowFlags_NoTitleBar);

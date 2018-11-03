@@ -13,6 +13,8 @@
 // Paradox
 #include <System/Logic/TransformSystem.hpp>
 #include <System/Logic/RenderSystem.hpp>
+
+#include <System/Component/Property.hpp>
 #include <System/Component/ShapeRenderer.hpp>
 #include <System/Component/Transform.hpp>
 
@@ -32,6 +34,7 @@ namespace paradox
 		/*auto entity = m_entities.create();
 		auto shape = std::make_unique<sf::CircleShape>(5.f);
 		shape->setFillColor(sf::Color::Green);
+		m_entities.assign<Property>(entity, "gameObject");
 		m_entities.assign<ShapeRenderer>(entity, std::move(shape));
 		m_entities.assign<Transform>(entity, sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);*/
 	}
@@ -79,12 +82,18 @@ namespace paradox
 			for (unsigned i = 0; i < input["size"]; ++i)
 			{
 				auto entity = m_entities.create();
+
+				// Property
+				m_entities.assign<Property>(entity, input["scene"][i]["property"]["name"].get<std::string>());
+
+				// Transform
 				m_entities.assign<Transform>(
 					entity, 
 					sf::Vector2f(input["scene"][i]["transform"]["position"][0], input["scene"][i]["transform"]["position"][1]),
 					sf::Vector2f(input["scene"][i]["transform"]["scale"][0], input["scene"][i]["transform"]["scale"][1]),
 					input["scene"][i]["transform"]["rotation"]);
 
+				// ShapeRenderer
 				if (input["scene"][i]["shapeRenderer"].is_object())
 				{
 					if (input["scene"][i]["shapeRenderer"]["type"] == "Circle")
@@ -117,16 +126,23 @@ namespace paradox
 		unsigned index = 0;
 		output["size"] = m_entities.alive();
 
-		auto view = m_entities.view<Transform, ShapeRenderer>(); // More components will follow here...
+		auto view = m_entities.view<Property, Transform, ShapeRenderer>(); // More components will follow here...
 
 		for (const auto& entity : view)
 		{
+			// Property
+			auto& property = view.get<Property>(entity);
+
+			output["scene"][index]["property"]["name"] = property.name;
+
+			// Transform
 			auto& transform = view.get<Transform>(entity);
 
 			output["scene"][index]["transform"]["position"] = { transform.position.x, transform.position.y };
 			output["scene"][index]["transform"]["scale"] = { transform.scale.x, transform.scale.y };
 			output["scene"][index]["transform"]["rotation"] = transform.rotation;
 
+			// ShapeRenderer
 			if (m_entities.has<ShapeRenderer>(entity))
 			{
 				auto& shapeRenderer = view.get<ShapeRenderer>(entity);
@@ -140,7 +156,6 @@ namespace paradox
 
 					output["scene"][index]["shapeRenderer"]["type"] = "Circle";
 					output["scene"][index]["shapeRenderer"]["radius"] = circle->getRadius();
-
 				}
 			}	
 
@@ -154,7 +169,7 @@ namespace paradox
 
 	void Scene::unloadScene()
 	{
-		m_entities.destroy<Transform>();
+		m_entities.destroy<Property>();
 	}
 
 	void Scene::update()

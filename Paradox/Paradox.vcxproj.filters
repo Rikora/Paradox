@@ -77,5 +77,8 @@
     <ClInclude Include="src\System\File\FileSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\System\Component\Property.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
