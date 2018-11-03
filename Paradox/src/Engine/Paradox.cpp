@@ -172,7 +172,7 @@ namespace paradox
 				{
 					// TODO: remove hardcoded meta folder in save path
 					std::string path;
-					if (utils::saveFile(path, "scene"))
+					if (utils::saveFile(path, "scene", ".scene"))
 					{
 						std::replace(path.begin(), path.end(), '\\', '/');
 						auto found = path.find_last_of("/");
