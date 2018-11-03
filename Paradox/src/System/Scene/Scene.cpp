@@ -29,7 +29,7 @@ namespace paradox
 	m_renderSystem(std::make_unique<RenderSystem>())
 	{
 		// Add a basic entity for test
-	/*	auto entity = m_entities.create();
+		/*auto entity = m_entities.create();
 		auto shape = std::make_unique<sf::CircleShape>(5.f);
 		shape->setFillColor(sf::Color::Green);
 		m_entities.assign<ShapeRenderer>(entity, std::move(shape));
@@ -44,7 +44,6 @@ namespace paradox
 
 	void Scene::loadScene(const std::string& path)
 	{
-		// Cache the path for future need?
 		json input;
 		std::ifstream handle;
 		std::ios_base::iostate exceptionMask = handle.exceptions() | std::ios::failbit;
@@ -66,13 +65,19 @@ namespace paradox
 			// Set current scene name
 			std::string tempPath = path;
 			std::replace(tempPath.begin(), tempPath.end(), '\\', '/');
-			auto found = tempPath.find_last_of("/");
-			m_name = tempPath.substr(found + 1);
+			const auto found = tempPath.find_last_of("/");
+			const auto name = tempPath.substr(found + 1);
+
+			// Make sure we don't append scene data to the current scene
+			if (m_name != name)
+			{
+				unloadScene();
+				m_name = name;
+			}
 
 			// Load scene data
 			for (unsigned i = 0; i < input["size"]; ++i)
 			{
-				// The entity will always have a transform?
 				auto entity = m_entities.create();
 				m_entities.assign<Transform>(entity, 
 											 sf::Vector2f(input["transform"]["position"][0], input["transform"]["position"][1]), 
@@ -87,6 +92,12 @@ namespace paradox
 						circle->setFillColor(sf::Color(input["shapeRenderer"]["color"][0],
 													   input["shapeRenderer"]["color"][1],
 													   input["shapeRenderer"]["color"][2]));
+
+						// Prevent transform glitch when loading a scene
+						auto transform = m_entities.get<Transform>(entity);
+						circle->setPosition(transform.position);
+						circle->setScale(transform.scale);
+						circle->setRotation(transform.rotation);
 
 						m_entities.assign<ShapeRenderer>(entity, std::move(circle));
 					}
@@ -110,7 +121,6 @@ namespace paradox
 		{
 			auto& transform = view.get<Transform>(entity);
 
-			// The entity will always have a transform?
 			output["transform"]["position"] = { transform.position.x, transform.position.y };
 			output["transform"]["scale"] = { transform.scale.x, transform.scale.y };
 			output["transform"]["rotation"] = transform.rotation;

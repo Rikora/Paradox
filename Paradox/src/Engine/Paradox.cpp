@@ -8,14 +8,11 @@
 
 // Paradox
 #include <Editor/DebugLog.hpp>
-#include <System/Component/ShapeRenderer.hpp> //
-#include <System/Component/Transform.hpp> //
 #include <System/Scene/SceneManager.hpp>
+#include <System/File/FileSystem.hpp>
 
 // SFML
 #include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/CircleShape.hpp> //
-#include <SFML/Graphics/RectangleShape.hpp> //
 
 // ImGUI
 #include <imgui/imgui.h>
@@ -147,24 +144,41 @@ namespace paradox
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				// Create an empty scene
 				if (ImGui::MenuItem("New scene", "Ctrl+N")) 
 				{
 					SceneManager::getInstance()->unloadScene();
+					SceneManager::getInstance()->setSceneName("untitled.scene");
 				}
 
+				// Open a scene file
 				if (ImGui::MenuItem("Open scene", "Ctrl+O"))
 				{
-					// TODO: add ability to browse and open file with nfd
+					std::string path;
+					if (utils::openFile(path, "scene"))
+					{
+						SceneManager::getInstance()->loadScene(path);
+					}
 				}
 
+				// Save current scene
 				if (ImGui::MenuItem("Save scene", "Ctrl+S"))
 				{
 					SceneManager::getInstance()->saveScene();
 				}
 
+				// Save current scene as the requested name
 				if (ImGui::MenuItem("Save scene as...", "Ctrl+Alt+S"))
 				{
-					// TODO: add ability to browse and save file with nfd
+					// TODO: remove hardcoded meta folder in save path
+					std::string path;
+					if (utils::saveFile(path, "scene"))
+					{
+						std::replace(path.begin(), path.end(), '\\', '/');
+						auto found = path.find_last_of("/");
+						SceneManager::getInstance()->setSceneName(path.substr(found + 1));
+						SceneManager::getInstance()->saveScene();
+					}
 				}
 
 				if (ImGui::MenuItem("Quit", "Escape")) 
