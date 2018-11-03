@@ -63,6 +63,12 @@ namespace paradox
 
 		if (!input.empty())
 		{
+			// Set current scene name
+			std::string tempPath = path;
+			std::replace(tempPath.begin(), tempPath.end(), '\\', '/');
+			auto found = tempPath.find_last_of("/");
+			m_name = tempPath.substr(found + 1);
+
 			// Load scene data
 			for (unsigned i = 0; i < input["size"]; ++i)
 			{

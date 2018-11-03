@@ -32,8 +32,8 @@ namespace paradox
 		void unloadScene();
 		void update();
 		void draw(sf::RenderTarget& target);
-		void setName(const std::string& name);
-		std::string getName() const;
+		void setSceneName(const std::string& name);
+		std::string getSceneName() const;
 		static SceneManager* getInstance();
 
 	private:

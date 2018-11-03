@@ -30,12 +30,12 @@ namespace paradox
 		m_currentScene.draw(target);
 	}
 
-	void SceneManager::setName(const std::string& name)
+	void SceneManager::setSceneName(const std::string& name)
 	{
 		m_currentScene.setName(name);
 	}
 
-	std::string SceneManager::getName() const
+	std::string SceneManager::getSceneName() const
 	{
 		return m_currentScene.getName();
 	}

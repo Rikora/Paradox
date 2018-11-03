@@ -120,7 +120,7 @@ namespace paradox
 				settings["winSize"] = { m_window.getSize().x, m_window.getSize().y };
 				settings["sceneSize"] = { m_sceneWindow.getSize().x, m_sceneWindow.getSize().y };
 				settings["gameSize"] = { m_gameWindow.getSize().x, m_gameWindow.getSize().y };
-				settings["currentScene"] = SceneManager::getInstance()->getName();
+				settings["currentScene"] = SceneManager::getInstance()->getSceneName();
 
 				std::ofstream o("meta/paradox.ini");
 				o << std::setw(4) << settings << std::endl;
@@ -267,7 +267,7 @@ namespace paradox
 
 	void Paradox::render()
 	{
-		m_window.setTitle(m_engineTitle + " - " + SceneManager::getInstance()->getName());
+		m_window.setTitle(m_engineTitle + " - " + SceneManager::getInstance()->getSceneName());
 		m_window.clear();
 
 		// Render GUI in the application window
