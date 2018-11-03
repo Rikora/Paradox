@@ -79,19 +79,22 @@ namespace paradox
 			for (unsigned i = 0; i < input["size"]; ++i)
 			{
 				auto entity = m_entities.create();
-				m_entities.assign<Transform>(entity, 
-											 sf::Vector2f(input["transform"]["position"][0], input["transform"]["position"][1]), 
-											 sf::Vector2f(input["transform"]["scale"][0], input["transform"]["scale"][1]),
-											 input["transform"]["rotation"]);
+				m_entities.assign<Transform>(
+					entity, 
+					sf::Vector2f(input["scene"][i]["transform"]["position"][0], input["scene"][i]["transform"]["position"][1]),
+					sf::Vector2f(input["scene"][i]["transform"]["scale"][0], input["scene"][i]["transform"]["scale"][1]),
+					input["scene"][i]["transform"]["rotation"]);
 
-				if (input["shapeRenderer"].is_object())
+				if (input["scene"][i]["shapeRenderer"].is_object())
 				{
-					if (input["shapeRenderer"]["type"] == "Circle")
+					if (input["scene"][i]["shapeRenderer"]["type"] == "Circle")
 					{
-						auto circle = std::make_unique<sf::CircleShape>(input["shapeRenderer"]["radius"].get<float>());
-						circle->setFillColor(sf::Color(input["shapeRenderer"]["color"][0],
-													   input["shapeRenderer"]["color"][1],
-													   input["shapeRenderer"]["color"][2]));
+						auto circle = std::make_unique<sf::CircleShape>(input["scene"][i]["shapeRenderer"]["radius"].get<float>());
+
+						circle->setFillColor(
+							sf::Color(input["scene"][i]["shapeRenderer"]["color"][0],
+							input["scene"][i]["shapeRenderer"]["color"][1],
+							input["scene"][i]["shapeRenderer"]["color"][2]));
 
 						// Prevent transform glitch when loading a scene
 						auto transform = m_entities.get<Transform>(entity);
@@ -101,8 +104,6 @@ namespace paradox
 
 						m_entities.assign<ShapeRenderer>(entity, std::move(circle));
 					}
-
-					// TODO: add case for rectangle
 				}
 			}	
 		}
@@ -113,6 +114,7 @@ namespace paradox
 		// Dump scene file
 		json output;
 
+		unsigned index = 0;
 		output["size"] = m_entities.alive();
 
 		auto view = m_entities.view<Transform, ShapeRenderer>(); // More components will follow here...
@@ -121,33 +123,28 @@ namespace paradox
 		{
 			auto& transform = view.get<Transform>(entity);
 
-			output["transform"]["position"] = { transform.position.x, transform.position.y };
-			output["transform"]["scale"] = { transform.scale.x, transform.scale.y };
-			output["transform"]["rotation"] = transform.rotation;
+			output["scene"][index]["transform"]["position"] = { transform.position.x, transform.position.y };
+			output["scene"][index]["transform"]["scale"] = { transform.scale.x, transform.scale.y };
+			output["scene"][index]["transform"]["rotation"] = transform.rotation;
 
 			if (m_entities.has<ShapeRenderer>(entity))
 			{
 				auto& shapeRenderer = view.get<ShapeRenderer>(entity);
 
 				auto fillColor = shapeRenderer.shape->getFillColor();
-				output["shapeRenderer"]["color"] = { fillColor.r, fillColor.g, fillColor.b };
+				output["scene"][index]["shapeRenderer"]["color"] = { fillColor.r, fillColor.g, fillColor.b };
 
 				if (typeid(*shapeRenderer.shape.get()) == typeid(sf::CircleShape))
 				{
 					auto circle = dynamic_cast<sf::CircleShape*>(shapeRenderer.shape.get());
 
-					output["shapeRenderer"]["type"] = "Circle";
-					output["shapeRenderer"]["radius"] = circle->getRadius();
+					output["scene"][index]["shapeRenderer"]["type"] = "Circle";
+					output["scene"][index]["shapeRenderer"]["radius"] = circle->getRadius();
 
 				}
-				//else if (typeid(*shapeRenderer.shape.get()) == typeid(sf::RectangleShape))
-				//{
-				//	auto rect = dynamic_cast<sf::RectangleShape*>(shapeRenderer.shape.get());
+			}	
 
-				//	output["shapeRenderer"]["type"] = "Rectangle";	
-				//	//
-				//}
-			}		
+			index++;
 		}
 
 		std::ofstream o("meta/" + m_name); // Hardcoded meta folder

@@ -31,6 +31,7 @@ namespace paradox
 {
 	const double dt = 1.0 / 60.0;
 
+	// TODO: check compiler extension (64-bit/32-bit)
 	Paradox::Paradox() :
 	m_engineTitle(std::string("Paradox") + " " + ENGINE_VERSION)
 	{
@@ -193,7 +194,7 @@ namespace paradox
 		}
 
 		// Docking system
-		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize); // Change this when adding icon bar
 		const ImGuiWindowFlags flags = (ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
 										ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings |
 										ImGuiWindowFlags_NoTitleBar);
