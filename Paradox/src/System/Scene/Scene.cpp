@@ -24,7 +24,7 @@ using namespace nlohmann;
 namespace paradox
 {
 	Scene::Scene() :
-	m_name("Untitled"),
+	m_name("untitled.scene"),
 	m_transformSystem(std::make_unique<TransformSystem>()),
 	m_renderSystem(std::make_unique<RenderSystem>())
 	{
@@ -134,7 +134,7 @@ namespace paradox
 			}		
 		}
 
-		std::ofstream o("meta/untitled.scene"); // Hardcoded scene path 
+		std::ofstream o("meta/" + m_name); // Hardcoded meta folder
 		o << std::setw(4) << output << std::endl;
 		o.close();
 	}

@@ -25,13 +25,17 @@
 // Json
 #include <json/json.hpp>
 
+// Define current engine version
+#define ENGINE_VERSION "1.0.0"
+
 using namespace nlohmann;
 
 namespace paradox
 {
 	const double dt = 1.0 / 60.0;
 
-	Paradox::Paradox()
+	Paradox::Paradox() :
+	m_engineTitle(std::string("Paradox") + " " + ENGINE_VERSION)
 	{
 		// Get settings for the current instance of the engine
 		json data;
@@ -57,11 +61,12 @@ namespace paradox
 			m_window.create(sf::VideoMode(data["winSize"][0], data["winSize"][1]), "Paradox");
 			m_sceneWindow.create(data["sceneSize"][0], data["sceneSize"][1]);
 			m_gameWindow.create(data["gameSize"][0], data["gameSize"][1]);
+			SceneManager::getInstance()->loadScene("meta/" + data["currentScene"].get<std::string>()); // Hardcoded meta folder
 		}
 		else
 		{
 			// Create engine instance with default settings
-			m_window.create(sf::VideoMode(800, 600), "Paradox");
+			m_window.create(sf::VideoMode(800, 600), m_engineTitle);
 			m_sceneWindow.create(800, 600);
 			m_gameWindow.create(800, 600);
 		}
@@ -76,9 +81,6 @@ namespace paradox
 		// Log test
 		DebugLog::log("Hello world");
 		DebugLog::log("Hello world again");
-
-		// Load current scene
-		SceneManager::getInstance()->loadScene("meta/untitled.scene");
 	}
 
 	Paradox::~Paradox()
@@ -118,6 +120,7 @@ namespace paradox
 				settings["winSize"] = { m_window.getSize().x, m_window.getSize().y };
 				settings["sceneSize"] = { m_sceneWindow.getSize().x, m_sceneWindow.getSize().y };
 				settings["gameSize"] = { m_gameWindow.getSize().x, m_gameWindow.getSize().y };
+				settings["currentScene"] = SceneManager::getInstance()->getName();
 
 				std::ofstream o("meta/paradox.ini");
 				o << std::setw(4) << settings << std::endl;
@@ -264,6 +267,7 @@ namespace paradox
 
 	void Paradox::render()
 	{
+		m_window.setTitle(m_engineTitle + " - " + SceneManager::getInstance()->getName());
 		m_window.clear();
 
 		// Render GUI in the application window

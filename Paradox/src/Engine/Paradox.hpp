@@ -23,5 +23,6 @@ namespace paradox
 		sf::RenderWindow m_window;
 		sf::RenderTexture m_sceneWindow;
 		sf::RenderTexture m_gameWindow;
+		std::string m_engineTitle;
 	};
 }

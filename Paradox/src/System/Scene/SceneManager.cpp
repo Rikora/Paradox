@@ -5,34 +5,39 @@
 
 namespace paradox
 {
-	SceneManager::SceneManager() :
-	m_currentScene(std::make_unique<Scene>())
-	{
-	}
-
 	void SceneManager::loadScene(const std::string& path)
 	{
-		m_currentScene->loadScene(path);
+		m_currentScene.loadScene(path);
 	}
 
 	void SceneManager::saveScene()
 	{
-		m_currentScene->saveScene();
+		m_currentScene.saveScene();
 	}
 
 	void SceneManager::unloadScene()
 	{
-		m_currentScene->unloadScene();
+		m_currentScene.unloadScene();
 	}
 
 	void SceneManager::update()
 	{
-		m_currentScene->update();
+		m_currentScene.update();
 	}
 
 	void SceneManager::draw(sf::RenderTarget& target)
 	{
-		m_currentScene->draw(target);
+		m_currentScene.draw(target);
+	}
+
+	void SceneManager::setName(const std::string& name)
+	{
+		m_currentScene.setName(name);
+	}
+
+	std::string SceneManager::getName() const
+	{
+		return m_currentScene.getName();
 	}
 
 	SceneManager* SceneManager::getInstance()

@@ -19,7 +19,7 @@ namespace paradox
 	class SceneManager
 	{
 	private:
-		SceneManager();
+		SceneManager() = default;
 		~SceneManager() = default;
 		SceneManager(const SceneManager&) {}
 		SceneManager& operator = (const SceneManager&) {}
@@ -32,9 +32,11 @@ namespace paradox
 		void unloadScene();
 		void update();
 		void draw(sf::RenderTarget& target);
+		void setName(const std::string& name);
+		std::string getName() const;
 		static SceneManager* getInstance();
 
 	private:
-		std::unique_ptr<Scene> m_currentScene;
+		Scene m_currentScene;
 	};
 }
