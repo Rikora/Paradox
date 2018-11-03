@@ -29,11 +29,11 @@ namespace paradox
 	m_renderSystem(std::make_unique<RenderSystem>())
 	{
 		// Add a basic entity for test
-		auto entity = m_entities.create();
+	/*	auto entity = m_entities.create();
 		auto shape = std::make_unique<sf::CircleShape>(5.f);
 		shape->setFillColor(sf::Color::Green);
 		m_entities.assign<ShapeRenderer>(entity, std::move(shape));
-		m_entities.assign<Transform>(entity, sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);
+		m_entities.assign<Transform>(entity, sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);*/
 	}
 
 	Scene::~Scene()
@@ -134,7 +134,7 @@ namespace paradox
 			}		
 		}
 
-		std::ofstream o("meta/untitled.scene");
+		std::ofstream o("meta/untitled.scene"); // Hardcoded scene path 
 		o << std::setw(4) << output << std::endl;
 		o.close();
 	}

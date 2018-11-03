@@ -3,9 +3,6 @@
 // SFML
 #include <SFML/Graphics/RenderTarget.hpp>
 
-// Paradox
-#include <System/Scene/Scene.hpp>
-
 namespace paradox
 {
 	SceneManager::SceneManager() :

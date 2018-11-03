@@ -10,11 +10,12 @@ namespace sf
 	class RenderTarget;
 }
 
+// Paradox
+#include <System/Scene/Scene.hpp>
+
 namespace paradox
 {
-	class Scene;
-
-	// Singleton instance for now
+	// Singleton instance
 	class SceneManager
 	{
 	private:

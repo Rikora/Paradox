@@ -10,7 +10,7 @@
 #include <Editor/DebugLog.hpp>
 #include <System/Component/ShapeRenderer.hpp> //
 #include <System/Component/Transform.hpp> //
-//#include <System/Scene/SceneManager.hpp>
+#include <System/Scene/SceneManager.hpp>
 
 // SFML
 #include <SFML/Window/Event.hpp>
@@ -77,16 +77,14 @@ namespace paradox
 		DebugLog::log("Hello world");
 		DebugLog::log("Hello world again");
 
-		// Create an entity
-		auto entity = m_registry.create();
-		auto shape = std::make_unique<sf::CircleShape>(5.f);
-		shape->setFillColor(sf::Color::Green);
-		m_registry.assign<ShapeRenderer>(entity, std::move(shape));
-		m_registry.assign<Transform>(entity, sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);
+		// Load current scene
+		SceneManager::getInstance()->loadScene("meta/untitled.scene");
 	}
 
 	Paradox::~Paradox()
 	{
+		SceneManager::getInstance()->saveScene();
+		SceneManager::getInstance()->unloadScene();
 		ImGui::SFML::Shutdown();
 	}
 
@@ -114,8 +112,6 @@ namespace paradox
 			// Exit application
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
 			{
-				//m_scene.saveScene();
-
 				// Dump settings file
 				json settings;
 				settings["winPos"] = { m_window.getPosition().x, m_window.getPosition().y };
@@ -135,7 +131,7 @@ namespace paradox
 	void Paradox::update(sf::Time dt)
 	{
 		// Update transformations of all entities
-		m_transformSystem.update(m_registry);
+		SceneManager::getInstance()->update();
 	}
 
 	void Paradox::updateGUI(sf::Time dt)
@@ -172,7 +168,7 @@ namespace paradox
 				m_sceneWindow.clear(sf::Color::Black); // Should be able to be set by the user
 				
 				// Render to scene window goes here...
-				m_renderSystem.update(m_registry, m_sceneWindow);
+				SceneManager::getInstance()->draw(m_sceneWindow);
 
 				m_sceneWindow.display();
 
