@@ -138,6 +138,42 @@ namespace paradox
 	{
 		// Update GUI
 		ImGui::SFML::Update(m_window, dt);
+		
+		//Menu
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("New scene", "Ctrl+N")) 
+				{
+					SceneManager::getInstance()->unloadScene();
+				}
+
+				if (ImGui::MenuItem("Open scene", "Ctrl+O"))
+				{
+					// TODO: add ability to browse and open file with nfd
+				}
+
+				if (ImGui::MenuItem("Save scene", "Ctrl+S"))
+				{
+					SceneManager::getInstance()->saveScene();
+				}
+
+				if (ImGui::MenuItem("Save scene as...", "Ctrl+Alt+S"))
+				{
+					// TODO: add ability to browse and save file with nfd
+				}
+
+				if (ImGui::MenuItem("Quit", "Escape")) 
+				{ 
+					m_window.close(); 
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMainMenuBar();
+		}
 
 		// Docking system
 		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
@@ -147,7 +183,7 @@ namespace paradox
 		const float oldWindowRounding = ImGui::GetStyle().WindowRounding; ImGui::GetStyle().WindowRounding = 0;
 		const bool visible = ImGui::Begin("Docking system", nullptr, ImVec2(0, 0), 1.f, flags);
 		ImGui::GetStyle().WindowRounding = oldWindowRounding;
-		ImGui::SetWindowPos(ImVec2(0, 0));
+		ImGui::SetWindowPos(ImVec2(0, 10));
 
 		if (visible)
 		{
