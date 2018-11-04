@@ -10,7 +10,7 @@ namespace paradox
 {
 	namespace utils
 	{
-		// Open a file path and return if the path is valid
+		// Open a file path and return if path is valid
 		bool openFile(std::string& path, const std::string& filter)
 		{
 			nfdchar_t* outPath = nullptr;
@@ -26,7 +26,7 @@ namespace paradox
 			return false;
 		}
 
-		// Check if the save path is valid
+		// Request a save location and return if operation was successful
 		bool saveFile(std::string& path, const std::string& filter, const std::string& extension)
 		{
 			nfdchar_t* outPath = nullptr;

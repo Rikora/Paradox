@@ -6,9 +6,6 @@
 #include <iostream>
 #include <sstream>
 
-// Filesystem C++17 test
-#include <filesystem>
-
 // Paradox
 #include <Editor/DebugLog.hpp>
 #include <System/Scene/SceneManager.hpp>
@@ -29,37 +26,9 @@
 #define ENGINE_VERSION "1.0.0"
 
 using namespace nlohmann;
-namespace fs = std::filesystem;
 
 namespace paradox
 {
-	void DisplayFileInfo(std::string &lead, fs::path &filename)
-	{
-		std::cout << lead << filename << std::endl;
-	}
-
-	void DisplayDirectoryTreeImp(const fs::path& pathToShow, int level)
-	{
-		if (fs::exists(pathToShow) && fs::is_directory(pathToShow))
-		{
-			auto lead = std::string(level * 3, ' '); // Used for identation
-			for (const auto& entry : fs::directory_iterator(pathToShow))
-			{
-				auto filename = entry.path().filename();
-				if (fs::is_directory(entry.status()))
-				{
-					std::cout << lead << "[+] " << filename << "\n";
-					DisplayDirectoryTreeImp(entry, level + 1);
-					std::cout << "\n";
-				}
-				else if (fs::is_regular_file(entry.status()))
-					DisplayFileInfo(lead, filename);
-				else
-					std::cout << lead << " [?]" << filename << "\n";
-			}
-		}
-	}
-
 	const double dt = 1.0 / 60.0;
 
 	// TODO: check compiler extension (64-bit/32-bit)
@@ -111,9 +80,12 @@ namespace paradox
 		DebugLog::log("Hello world");
 		DebugLog::log("Hello world again");
 
-		// Write contents of the meta folder with file system
-		const fs::path path = "E:/Paradox/Paradox/meta";
-		DisplayDirectoryTreeImp(path, 0);
+		// Load folder icon texture and apply to sprite
+		// Icons should either be 16x16 or 32x32
+		if (m_folderTexture.loadFromFile("res/Icons/folder.png"))
+		{
+			m_folderIcon.setTexture(m_folderTexture);
+		}
 	}
 
 	Paradox::~Paradox()
@@ -299,6 +271,7 @@ namespace paradox
 
 			if (ImGui::BeginDock("Project"))
 			{
+				listProjectDirectory("E:/Paradox/Paradox/project"); // TODO: add path for the project the user has created
 			}
 			ImGui::EndDock();
 
@@ -324,5 +297,35 @@ namespace paradox
 		ImGui::SFML::Render(m_window);
 
 		m_window.display();
+	}
+
+	void Paradox::listProjectDirectory(const fs::path& pathToShow)
+	{
+		// TODO: add ability to select leaf nodes (files) for inspector and drag drop later on
+		if (fs::exists(pathToShow) && fs::is_directory(pathToShow))
+		{
+			for (const auto& entry : fs::directory_iterator(pathToShow))
+			{
+				auto filename = entry.path().filename();
+
+				if (fs::is_directory(entry.status())) // Folders
+				{				
+					// Might have some problems with the ptr id later on if same file name
+					ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 3);
+					ImGui::Image(m_folderIcon);
+					ImGui::SameLine();
+					if (ImGui::TreeNodeEx(filename.u8string().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						listProjectDirectory(entry);
+						ImGui::TreePop();
+					}
+					ImGui::PopStyleVar();
+				}
+				else if (fs::is_regular_file(entry.status())) // Files
+				{
+					ImGui::Text(filename.u8string().c_str());
+				}
+			}
+		}
 	}
 }
