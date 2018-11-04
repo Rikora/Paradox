@@ -302,6 +302,16 @@ namespace paradox
 	void Paradox::listProjectDirectory(const fs::path& pathToShow)
 	{
 		static std::string clickedNode;
+		static bool selected = false;
+
+		if (selected)
+		{
+			// Delete folder and its contents
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete))
+			{
+				fs::remove_all(clickedNode);
+			}
+		}
 
 		// TODO: add ability to select leaf nodes (files) for inspector and drag drop later on
 		if (fs::exists(pathToShow) && fs::is_directory(pathToShow))
@@ -313,17 +323,19 @@ namespace paradox
 				if (fs::is_directory(entry.status())) // Folders
 				{
 					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | 
-						(clickedNode == filename.u8string() ? ImGuiTreeNodeFlags_Selected : 0);
+						(clickedNode == entry.path().u8string() ? ImGuiTreeNodeFlags_Selected : 0);
 					ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 2.5f);
 					ImGui::Image(m_folderIcon);
 					ImGui::SameLine();
 
+					// Might need to worry about id later on, but we will see...
 					//ImGui::PushID(filename.u8string().c_str());
 					bool nodeOpen = ImGui::TreeNodeEx(filename.u8string().c_str(), nodeFlags);
-					
+
 					if (ImGui::IsItemClicked())
 					{
-						clickedNode = filename.u8string();
+						clickedNode = entry.path().u8string();
+						selected = true;
 					}
 
 					if (nodeOpen)
