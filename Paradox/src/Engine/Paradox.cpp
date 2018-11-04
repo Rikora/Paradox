@@ -261,33 +261,35 @@ namespace paradox
 
 			if (ImGui::BeginDock("Inspector"))
 			{
-				static int selection_mask = (1 << 2);
 				static int node_clicked = -1;
-				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 3); // Increase spacing to differentiate leaves from expanded contents.
+				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 3);
 
 				for (int i = 0; i < 4; i++)
 				{
-					ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0);
+					ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | (node_clicked == i ? ImGuiTreeNodeFlags_Selected : 0);
 
 					// Node
-					bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Node %d", i);
+					ImGui::PushID(i);
+					if (ImGui::TreeNodeEx("Selectable", node_flags))
+					{
+						if (ImGui::IsItemClicked())
+						{
+							node_clicked = i;
+						}
 
+						ImGui::Text("Blah blah\nBlah Blah");
+						ImGui::TreePop();
+					}
+
+					// Need selection to work when the node is closed as well
 					if (ImGui::IsItemClicked())
 					{
 						node_clicked = i;
 					}
 
-					if (node_open)
-					{
-						ImGui::Text("Blah blah\nBlah Blah");
-						ImGui::TreePop();
-					}
+					ImGui::PopID();
 				}
 
-				if (node_clicked != -1)
-				{
-					selection_mask = (1 << node_clicked); // Click to single-select
-				}
 				ImGui::PopStyleVar();
 			}
 			ImGui::EndDock();
