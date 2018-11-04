@@ -261,6 +261,34 @@ namespace paradox
 
 			if (ImGui::BeginDock("Inspector"))
 			{
+				static int selection_mask = (1 << 2);
+				static int node_clicked = -1;
+				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 3); // Increase spacing to differentiate leaves from expanded contents.
+
+				for (int i = 0; i < 4; i++)
+				{
+					ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ((selection_mask & (1 << i)) ? ImGuiTreeNodeFlags_Selected : 0);
+
+					// Node
+					bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)i, node_flags, "Selectable Node %d", i);
+
+					if (ImGui::IsItemClicked())
+					{
+						node_clicked = i;
+					}
+
+					if (node_open)
+					{
+						ImGui::Text("Blah blah\nBlah Blah");
+						ImGui::TreePop();
+					}
+				}
+
+				if (node_clicked != -1)
+				{
+					selection_mask = (1 << node_clicked); // Click to single-select
+				}
+				ImGui::PopStyleVar();
 			}
 			ImGui::EndDock();
 
@@ -311,10 +339,11 @@ namespace paradox
 				if (fs::is_directory(entry.status())) // Folders
 				{				
 					// Might have some problems with the ptr id later on if same file name
-					ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 3);
+					ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 2.5f);
 					ImGui::Image(m_folderIcon);
 					ImGui::SameLine();
-					if (ImGui::TreeNodeEx(filename.u8string().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+
+					if (ImGui::TreeNodeEx(filename.u8string().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow))
 					{
 						listProjectDirectory(entry);
 						ImGui::TreePop();
@@ -323,6 +352,11 @@ namespace paradox
 				}
 				else if (fs::is_regular_file(entry.status())) // Files
 				{
+					// Placeholder icon for files
+					ImGui::Image(m_folderIcon);
+					ImGui::SameLine();
+					//
+
 					ImGui::Text(filename.u8string().c_str());
 				}
 			}
