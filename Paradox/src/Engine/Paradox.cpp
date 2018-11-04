@@ -260,37 +260,7 @@ namespace paradox
 			ImGui::EndDock();
 
 			if (ImGui::BeginDock("Inspector"))
-			{
-				static int node_clicked = -1;
-				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 3);
-
-				for (int i = 0; i < 4; i++)
-				{
-					ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | (node_clicked == i ? ImGuiTreeNodeFlags_Selected : 0);
-
-					// Node
-					ImGui::PushID(i);
-					if (ImGui::TreeNodeEx("Selectable", node_flags))
-					{
-						if (ImGui::IsItemClicked())
-						{
-							node_clicked = i;
-						}
-
-						ImGui::Text("Blah blah\nBlah Blah");
-						ImGui::TreePop();
-					}
-
-					// Need selection to work when the node is closed as well
-					if (ImGui::IsItemClicked())
-					{
-						node_clicked = i;
-					}
-
-					ImGui::PopID();
-				}
-
-				ImGui::PopStyleVar();
+			{	
 			}
 			ImGui::EndDock();
 
@@ -331,6 +301,8 @@ namespace paradox
 
 	void Paradox::listProjectDirectory(const fs::path& pathToShow)
 	{
+		static std::string clickedNode;
+
 		// TODO: add ability to select leaf nodes (files) for inspector and drag drop later on
 		if (fs::exists(pathToShow) && fs::is_directory(pathToShow))
 		{
@@ -339,18 +311,29 @@ namespace paradox
 				auto filename = entry.path().filename();
 
 				if (fs::is_directory(entry.status())) // Folders
-				{				
-					// Might have some problems with the ptr id later on if same file name
+				{
+					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | 
+						(clickedNode == filename.u8string() ? ImGuiTreeNodeFlags_Selected : 0);
 					ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 2.5f);
 					ImGui::Image(m_folderIcon);
 					ImGui::SameLine();
 
-					if (ImGui::TreeNodeEx(filename.u8string().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow))
+					//ImGui::PushID(filename.u8string().c_str());
+					bool nodeOpen = ImGui::TreeNodeEx(filename.u8string().c_str(), nodeFlags);
+					
+					if (ImGui::IsItemClicked())
+					{
+						clickedNode = filename.u8string();
+					}
+
+					if (nodeOpen)
 					{
 						listProjectDirectory(entry);
 						ImGui::TreePop();
 					}
+					
 					ImGui::PopStyleVar();
+					//ImGui::PopID();
 				}
 				else if (fs::is_regular_file(entry.status())) // Files
 				{
