@@ -35,5 +35,7 @@ namespace paradox
 		//
 		sf::Texture m_folderTexture;
 		sf::Sprite m_folderIcon;
+		static std::string clickedNode;
+		static bool selected;
 	};
 }

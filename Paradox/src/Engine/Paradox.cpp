@@ -29,6 +29,10 @@ using namespace nlohmann;
 
 namespace paradox
 {
+	// Temp static variables in this class
+	std::string Paradox::clickedNode = "";
+	bool Paradox::selected = false;
+
 	const double dt = 1.0 / 60.0;
 
 	// TODO: check compiler extension (64-bit/32-bit)
@@ -98,12 +102,13 @@ namespace paradox
 	void Paradox::run()
 	{
 		sf::Clock clock;
+		sf::Clock guiClock;
 
 		while (m_window.isOpen())
 		{
 			pollEvents();
 			update(clock.restart());
-			updateGUI(clock.restart());
+			updateGUI(guiClock.restart());
 			render();
 		}
 	}
@@ -146,6 +151,18 @@ namespace paradox
 	{
 		// Update GUI
 		ImGui::SFML::Update(m_window, dt);
+
+		// Temp GUI location stuff for project view
+		if (selected)
+		{
+			// Delete folder and its contents
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete))
+			{
+				fs::remove_all(clickedNode);
+			}
+		}
+
+		// TODO: ability to rename folders if double clicked when selected?
 		
 		//Menu
 		if (ImGui::BeginMainMenuBar())
@@ -301,16 +318,58 @@ namespace paradox
 
 	void Paradox::listProjectDirectory(const fs::path& pathToShow)
 	{
-		static std::string clickedNode;
-		static bool selected = false;
-
-		if (selected)
+		ImGui::SetNextWindowSize(ImVec2(100, 0));
+		if (ImGui::BeginPopup("Project_Folder_Popup"))
 		{
-			// Delete folder and its contents
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete))
+			ImGui::Text("File");
+			ImGui::Separator();
+			if (ImGui::BeginMenu("Add"))
+			{
+				// TODO: add more menu options
+				if (ImGui::MenuItem("Folder"))
+				{
+					// TODO: add ability to create multiple directories at the same time
+					// without the need to rename each before continuing
+					fs::create_directory(clickedNode + "/NewFolder");
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::MenuItem("Delete"))
 			{
 				fs::remove_all(clickedNode);
 			}
+
+			if (ImGui::BeginMenu("Rename"))
+			{
+				ImGui::Text("New name:");
+
+				static std::vector<char> buffer(50);
+
+				if (ImGui::InputText("", buffer.data(), buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
+				{
+					auto tempName = clickedNode;
+
+					std::replace(tempName.begin(), tempName.end(), '\\', '/');
+					tempName = tempName.substr(0, tempName.find_last_of("/"));
+					auto newPath = tempName + "/" + buffer.data();
+
+					// Rename folder
+					if (!fs::exists(newPath))
+					{
+						fs::rename(clickedNode, newPath);
+					}
+
+					// Reset input buffer
+					buffer.clear();
+					buffer.resize(50);
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndPopup();
 		}
 
 		// TODO: add ability to select leaf nodes (files) for inspector and drag drop later on
@@ -336,6 +395,13 @@ namespace paradox
 					{
 						clickedNode = entry.path().u8string();
 						selected = true;
+					}
+
+					if (ImGui::IsItemClicked(1))
+					{
+						clickedNode = entry.path().u8string();
+						selected = true;
+						ImGui::OpenPopup("Project_Folder_Popup"); // Need a separate one for files
 					}
 
 					if (nodeOpen)
