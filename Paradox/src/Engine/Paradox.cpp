@@ -329,6 +329,9 @@ namespace paradox
 			ImGui::Separator();
 			if (ImGui::BeginMenu("Add"))
 			{
+				ImGui::Image(m_folderIcon);
+				ImGui::SameLine();
+
 				// TODO: add more menu options
 				if (ImGui::MenuItem("Folder"))
 				{
