@@ -158,7 +158,10 @@ namespace paradox
 			// Delete folder and its contents
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete))
 			{
-				fs::remove_all(clickedNode);
+				if (fs::exists(clickedNode))
+				{
+					fs::remove_all(clickedNode);
+				}
 			}
 		}
 
@@ -318,6 +321,7 @@ namespace paradox
 
 	void Paradox::listProjectDirectory(const fs::path& pathToShow)
 	{
+		// Folder popup
 		ImGui::SetNextWindowSize(ImVec2(100, 0));
 		if (ImGui::BeginPopup("Project_Folder_Popup"))
 		{
@@ -338,7 +342,10 @@ namespace paradox
 
 			if (ImGui::MenuItem("Delete"))
 			{
-				fs::remove_all(clickedNode);
+				if (fs::exists(clickedNode))
+				{
+					fs::remove_all(clickedNode);
+				}
 			}
 
 			if (ImGui::BeginMenu("Rename"))
@@ -372,7 +379,7 @@ namespace paradox
 			ImGui::EndPopup();
 		}
 
-		// TODO: add ability to select leaf nodes (files) for inspector and drag drop later on
+		// Iterate through the project directory and show folders and files
 		if (fs::exists(pathToShow) && fs::is_directory(pathToShow))
 		{
 			for (const auto& entry : fs::directory_iterator(pathToShow))
@@ -384,6 +391,8 @@ namespace paradox
 					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | 
 						(clickedNode == entry.path().u8string() ? ImGuiTreeNodeFlags_Selected : 0);
 					ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 2.5f);
+
+					// Folder icon
 					ImGui::Image(m_folderIcon);
 					ImGui::SameLine();
 
@@ -401,7 +410,7 @@ namespace paradox
 					{
 						clickedNode = entry.path().u8string();
 						selected = true;
-						ImGui::OpenPopup("Project_Folder_Popup"); // Need a separate one for files
+						ImGui::OpenPopup("Project_Folder_Popup");
 					}
 
 					if (nodeOpen)
@@ -415,12 +424,87 @@ namespace paradox
 				}
 				else if (fs::is_regular_file(entry.status())) // Files
 				{
-					// Placeholder icon for files
-					ImGui::Image(m_folderIcon);
+					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | 
+						(clickedNode == entry.path().u8string() ? ImGuiTreeNodeFlags_Selected : 0);
+
+					// Icons for file extensions
+					/*auto extension = clickedNode.substr(clickedNode.find_last_of("."));
+
+					if (extension == ".lua")
+					{
+					}*/
+					//...
+					ImGui::Image(m_folderIcon); // Placeholder icon
 					ImGui::SameLine();
 					//
 
-					ImGui::Text(filename.u8string().c_str());
+					bool nodeOpen = ImGui::TreeNodeEx(filename.u8string().c_str(), nodeFlags);
+
+					if (ImGui::IsItemClicked())
+					{
+						clickedNode = entry.path().u8string();
+						selected = true;
+					}
+
+					if (ImGui::IsItemClicked(1))
+					{
+						clickedNode = entry.path().u8string();
+						selected = true;
+						ImGui::OpenPopup("Project_File_Popup");
+					}
+
+					// File popup
+					ImGui::SetNextWindowSize(ImVec2(100, 0));
+					if (ImGui::BeginPopup("Project_File_Popup"))
+					{
+						ImGui::Text("File");
+						ImGui::Separator();
+
+						if (ImGui::MenuItem("Delete"))
+						{
+							if (fs::exists(clickedNode))
+							{
+								fs::remove_all(clickedNode);
+							}
+						}
+
+						if (ImGui::BeginMenu("Rename"))
+						{
+							ImGui::Text("New name:");
+
+							static std::vector<char> buffer(50);
+
+							if (ImGui::InputText("", buffer.data(), buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
+							{
+								auto tempName = clickedNode;
+
+								// Extension is fix
+								std::replace(tempName.begin(), tempName.end(), '\\', '/');
+								auto extension = tempName.substr(tempName.find_last_of("."));
+								tempName = tempName.substr(0, tempName.find_last_of("/"));
+								auto newPath = tempName + "/" + buffer.data() + extension;
+
+								// Rename file
+								if (!fs::exists(newPath))
+								{
+									fs::rename(clickedNode, newPath);
+								}
+
+								// Reset input buffer
+								buffer.clear();
+								buffer.resize(50);
+							}
+
+							ImGui::EndMenu();
+						}
+
+						ImGui::EndPopup();
+					}
+
+					if (nodeOpen)
+					{
+						ImGui::TreePop();
+					}
 				}
 			}
 		}
