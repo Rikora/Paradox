@@ -5,6 +5,7 @@
 
 namespace paradox
 {
+	// Make this class a singleton instead?
 	class DebugLog
 	{
 	public:

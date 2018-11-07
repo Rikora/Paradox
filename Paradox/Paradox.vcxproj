@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="src\App\main.cpp" />
     <ClCompile Include="src\Editor\DebugLog.cpp" />
+    <ClCompile Include="src\Editor\Docking\Docks\ProjectDock.cpp" />
     <ClCompile Include="src\Editor\Docking\imgui_dock.cpp" />
     <ClCompile Include="src\Engine\Paradox.cpp" />
     <ClCompile Include="src\GUI\imgui-SFML.cpp" />
@@ -164,6 +165,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor\DebugLog.hpp" />
+    <ClInclude Include="src\Editor\Docking\Dock.hpp" />
+    <ClInclude Include="src\Editor\Docking\Docks\ProjectDock.hpp" />
     <ClInclude Include="src\Engine\Paradox.hpp" />
     <ClInclude Include="src\System\Component\Property.hpp" />
     <ClInclude Include="src\System\Component\ShapeRenderer.hpp" />

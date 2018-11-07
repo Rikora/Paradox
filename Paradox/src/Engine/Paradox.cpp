@@ -6,13 +6,14 @@
 #include <iostream>
 #include <sstream>
 
+// SFML
+#include <SFML/Window/Event.hpp>
+
 // Paradox
+#include <Editor/Docking/Docks/ProjectDock.hpp>
 #include <Editor/DebugLog.hpp>
 #include <System/Scene/SceneManager.hpp>
 #include <System/File/FileSystem.hpp>
-
-// SFML
-#include <SFML/Window/Event.hpp>
 
 // ImGUI
 #include <imgui/imgui.h>
@@ -29,10 +30,6 @@ using namespace nlohmann;
 
 namespace paradox
 {
-	// Temp static variables in this class
-	std::string Paradox::clickedNode = "";
-	bool Paradox::selected = false;
-
 	const double dt = 1.0 / 60.0;
 
 	// TODO: check compiler extension (64-bit/32-bit)
@@ -86,9 +83,11 @@ namespace paradox
 
 		// Load folder icon texture and apply to sprite
 		// Icons should either be 16x16 or 32x32
+		// This should be handled by an internal resource manager?
 		if (m_folderTexture.loadFromFile("res/Icons/folder.png"))
 		{
 			m_folderIcon.setTexture(m_folderTexture);
+			m_projectDock = std::make_unique<ProjectDock>(m_folderIcon);
 		}
 	}
 
@@ -152,20 +151,8 @@ namespace paradox
 		// Update GUI
 		ImGui::SFML::Update(m_window, dt);
 
-		// Temp GUI location stuff for project view
-		if (selected)
-		{
-			// Delete folder and its contents
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete))
-			{
-				if (fs::exists(clickedNode))
-				{
-					fs::remove_all(clickedNode);
-				}
-			}
-		}
-
-		// TODO: ability to rename folders if double clicked when selected?
+		// Update project dock
+		m_projectDock->update();
 		
 		//Menu
 		if (ImGui::BeginMainMenuBar())
@@ -291,7 +278,7 @@ namespace paradox
 
 			if (ImGui::BeginDock("Project"))
 			{
-				listProjectDirectory("E:/Paradox/Paradox/project"); // TODO: add path for the project the user has created
+				m_projectDock->draw();
 			}
 			ImGui::EndDock();
 
@@ -317,199 +304,5 @@ namespace paradox
 		ImGui::SFML::Render(m_window);
 
 		m_window.display();
-	}
-
-	void Paradox::listProjectDirectory(const fs::path& pathToShow)
-	{
-		// Folder popup
-		ImGui::SetNextWindowSize(ImVec2(100, 0));
-		if (ImGui::BeginPopup("Project_Folder_Popup"))
-		{
-			ImGui::Text("File");
-			ImGui::Separator();
-			if (ImGui::BeginMenu("Add"))
-			{
-				ImGui::Image(m_folderIcon);
-				ImGui::SameLine();
-
-				// TODO: add more menu options
-				if (ImGui::MenuItem("Folder"))
-				{
-					// TODO: add ability to create multiple directories at the same time
-					// without the need to rename each before continuing
-					fs::create_directory(clickedNode + "/NewFolder");
-				}
-
-				ImGui::EndMenu();
-			}
-
-			if (ImGui::MenuItem("Delete"))
-			{
-				if (fs::exists(clickedNode))
-				{
-					fs::remove_all(clickedNode);
-				}
-			}
-
-			if (ImGui::BeginMenu("Rename"))
-			{
-				ImGui::Text("New name:");
-
-				static std::vector<char> buffer(50);
-
-				if (ImGui::InputText("", buffer.data(), buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
-				{
-					auto tempName = clickedNode;
-
-					std::replace(tempName.begin(), tempName.end(), '\\', '/');
-					tempName = tempName.substr(0, tempName.find_last_of("/"));
-					auto newPath = tempName + "/" + buffer.data();
-
-					// Rename folder
-					if (!fs::exists(newPath))
-					{
-						fs::rename(clickedNode, newPath);
-					}
-
-					// Reset input buffer
-					buffer.clear();
-					buffer.resize(50);
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndPopup();
-		}
-
-		// Iterate through the project directory and show folders and files
-		if (fs::exists(pathToShow) && fs::is_directory(pathToShow))
-		{
-			for (const auto& entry : fs::directory_iterator(pathToShow))
-			{
-				auto filename = entry.path().filename();
-
-				if (fs::is_directory(entry.status())) // Folders
-				{
-					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | 
-						(clickedNode == entry.path().u8string() ? ImGuiTreeNodeFlags_Selected : 0);
-					ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 2.5f);
-
-					// Folder icon
-					ImGui::Image(m_folderIcon);
-					ImGui::SameLine();
-
-					// Might need to worry about id later on, but we will see...
-					//ImGui::PushID(filename.u8string().c_str());
-					bool nodeOpen = ImGui::TreeNodeEx(filename.u8string().c_str(), nodeFlags);
-
-					if (ImGui::IsItemClicked())
-					{
-						clickedNode = entry.path().u8string();
-						selected = true;
-					}
-
-					if (ImGui::IsItemClicked(1))
-					{
-						clickedNode = entry.path().u8string();
-						selected = true;
-						ImGui::OpenPopup("Project_Folder_Popup");
-					}
-
-					if (nodeOpen)
-					{
-						listProjectDirectory(entry);
-						ImGui::TreePop();
-					}
-					
-					ImGui::PopStyleVar();
-					//ImGui::PopID();
-				}
-				else if (fs::is_regular_file(entry.status())) // Files
-				{
-					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | 
-						(clickedNode == entry.path().u8string() ? ImGuiTreeNodeFlags_Selected : 0);
-
-					// Icons for file extensions
-					/*auto extension = clickedNode.substr(clickedNode.find_last_of("."));
-
-					if (extension == ".lua")
-					{
-					}*/
-					//...
-					ImGui::Image(m_folderIcon); // Placeholder icon
-					ImGui::SameLine();
-					//
-
-					bool nodeOpen = ImGui::TreeNodeEx(filename.u8string().c_str(), nodeFlags);
-
-					if (ImGui::IsItemClicked())
-					{
-						clickedNode = entry.path().u8string();
-						selected = true;
-					}
-
-					if (ImGui::IsItemClicked(1))
-					{
-						clickedNode = entry.path().u8string();
-						selected = true;
-						ImGui::OpenPopup("Project_File_Popup");
-					}
-
-					// File popup
-					ImGui::SetNextWindowSize(ImVec2(100, 0));
-					if (ImGui::BeginPopup("Project_File_Popup"))
-					{
-						ImGui::Text("File");
-						ImGui::Separator();
-
-						if (ImGui::MenuItem("Delete"))
-						{
-							if (fs::exists(clickedNode))
-							{
-								fs::remove_all(clickedNode);
-							}
-						}
-
-						if (ImGui::BeginMenu("Rename"))
-						{
-							ImGui::Text("New name:");
-
-							static std::vector<char> buffer(50);
-
-							if (ImGui::InputText("", buffer.data(), buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue))
-							{
-								auto tempName = clickedNode;
-
-								// Extension is fix
-								std::replace(tempName.begin(), tempName.end(), '\\', '/');
-								auto extension = tempName.substr(tempName.find_last_of("."));
-								tempName = tempName.substr(0, tempName.find_last_of("/"));
-								auto newPath = tempName + "/" + buffer.data() + extension;
-
-								// Rename file
-								if (!fs::exists(newPath))
-								{
-									fs::rename(clickedNode, newPath);
-								}
-
-								// Reset input buffer
-								buffer.clear();
-								buffer.resize(50);
-							}
-
-							ImGui::EndMenu();
-						}
-
-						ImGui::EndPopup();
-					}
-
-					if (nodeOpen)
-					{
-						ImGui::TreePop();
-					}
-				}
-			}
-		}
 	}
 }
