@@ -1,14 +1,17 @@
 #pragma once
 
+// SFML
+#include <SFML/Graphics/Color.hpp>
+
 namespace paradox
 {
-	// Brief sketch of abstract base class for docks
 	class Dock
 	{
 	public:
 		virtual ~Dock() {}
 
-		virtual void update() = 0;
-		virtual void draw() = 0;
+		virtual void update() {};
+		virtual void draw() {};
+		virtual void draw(const sf::Color& color) {}
 	};
 }

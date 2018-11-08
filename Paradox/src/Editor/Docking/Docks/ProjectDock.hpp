@@ -13,7 +13,7 @@ namespace fs = std::filesystem;
 
 namespace paradox
 {
-	class ProjectDock : public Dock
+	class ProjectDock final : public Dock
 	{
 	public:
 		ProjectDock(const sf::Sprite& sprite);
