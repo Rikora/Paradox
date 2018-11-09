@@ -12,8 +12,9 @@
 // Paradox
 #include <Window/WindowManager.hpp>
 #include <Editor/Docking/DockingManager.hpp>
+#include <Editor/Menu/MenuManager.hpp>
 #include <System/Scene/SceneManager.hpp>
-#include <System/File/FileSystem.hpp>
+
 
 // ImGUI
 #include <imgui/imgui.h>
@@ -70,10 +71,11 @@ namespace paradox
 		// Temp -> replace with setFramerateLimit?
 		window->setVerticalSyncEnabled(true);
 
-		// Init GUI and editor
+		// Init GUI and editor systems
 		ImGui::SFML::Init(*window);
 
 		DockingManager::getInstance()->init();
+		MenuManager::getInstance()->init();
 	}
 
 	Paradox::~Paradox()
@@ -135,59 +137,7 @@ namespace paradox
 		// Update GUI
 		ImGui::SFML::Update(window, dt);
 
-		// TODO: move to separate editor class
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				// Create an empty scene
-				if (ImGui::MenuItem("New scene", "Ctrl+N")) 
-				{
-					SceneManager::getInstance()->unloadScene();
-					SceneManager::getInstance()->setSceneName("untitled.scene");
-				}
-
-				// Open a scene file
-				if (ImGui::MenuItem("Open scene", "Ctrl+O"))
-				{
-					std::string path;
-					if (utils::openFile(path, "scene"))
-					{
-						SceneManager::getInstance()->loadScene(path);
-					}
-				}
-
-				// Save current scene
-				if (ImGui::MenuItem("Save scene", "Ctrl+S"))
-				{
-					SceneManager::getInstance()->saveScene();
-				}
-
-				// Save current scene as the requested name
-				if (ImGui::MenuItem("Save scene as...", "Ctrl+Alt+S"))
-				{
-					// TODO: remove hardcoded meta folder in save path
-					std::string path;
-					if (utils::saveFile(path, "scene", ".scene"))
-					{
-						std::replace(path.begin(), path.end(), '\\', '/');
-						auto found = path.find_last_of("/");
-						SceneManager::getInstance()->setSceneName(path.substr(found + 1));
-						SceneManager::getInstance()->saveScene();
-					}
-				}
-
-				if (ImGui::MenuItem("Quit", "Escape")) 
-				{ 
-					window.close(); 
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMainMenuBar();
-		}
-
+		MenuManager::getInstance()->draw();
 		DockingManager::getInstance()->draw();
 	}
 

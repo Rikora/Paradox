@@ -156,7 +156,9 @@
     <ClCompile Include="src\Editor\Docking\Docks\GameDock.cpp" />
     <ClCompile Include="src\Editor\Docking\Docks\ProjectDock.cpp" />
     <ClCompile Include="src\Editor\Docking\Docks\SceneDock.cpp" />
-    <ClCompile Include="src\Editor\Docking\imgui_dock.cpp" />
+    <ClCompile Include="src\GUI\imgui_dock.cpp" />
+    <ClCompile Include="src\Editor\Menu\MenuManager.cpp" />
+    <ClCompile Include="src\Editor\Menu\Submenus\FileMenu.cpp" />
     <ClCompile Include="src\Engine\Paradox.cpp" />
     <ClCompile Include="src\GUI\imgui-SFML.cpp" />
     <ClCompile Include="src\GUI\imgui.cpp" />
@@ -174,6 +176,9 @@
     <ClInclude Include="src\Editor\Docking\Docks\GameDock.hpp" />
     <ClInclude Include="src\Editor\Docking\Docks\ProjectDock.hpp" />
     <ClInclude Include="src\Editor\Docking\Docks\SceneDock.hpp" />
+    <ClInclude Include="src\Editor\Menu\Menu.hpp" />
+    <ClInclude Include="src\Editor\Menu\MenuManager.hpp" />
+    <ClInclude Include="src\Editor\Menu\Submenus\FileMenu.hpp" />
     <ClInclude Include="src\Engine\Paradox.hpp" />
     <ClInclude Include="src\System\Component\Property.hpp" />
     <ClInclude Include="src\System\Component\ShapeRenderer.hpp" />

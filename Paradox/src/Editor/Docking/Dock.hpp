@@ -5,6 +5,7 @@
 
 namespace paradox
 {
+	// Dock base class
 	class Dock
 	{
 	public:

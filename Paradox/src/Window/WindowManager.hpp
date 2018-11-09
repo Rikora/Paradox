@@ -5,6 +5,7 @@
 
 namespace paradox
 {
+	// Singleton instance
 	class WindowManager
 	{
 	private:
