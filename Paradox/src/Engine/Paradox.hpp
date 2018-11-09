@@ -14,12 +14,11 @@ namespace paradox
 		void run();
 
 	private:
-		void pollEvents();
+		void pollEvents(sf::RenderWindow& window);
 		void update(sf::Time dt);
-		void updateGUI(sf::Time dt);
-		void render();
+		void updateGUI(sf::RenderWindow& window, sf::Time dt);
+		void render(sf::RenderWindow& window);
 
-		sf::RenderWindow m_window;
 		std::string m_engineTitle;
 	};
 }

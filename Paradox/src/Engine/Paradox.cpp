@@ -10,6 +10,7 @@
 #include <SFML/Window/Event.hpp>
 
 // Paradox
+#include <Window/WindowManager.hpp>
 #include <Editor/Docking/DockingManager.hpp>
 #include <System/Scene/SceneManager.hpp>
 #include <System/File/FileSystem.hpp>
@@ -30,7 +31,6 @@ namespace paradox
 {
 	const double dt = 1.0 / 60.0;
 
-	// TODO: check compiler extension (64-bit/32-bit)
 	Paradox::Paradox() :
 	m_engineTitle(std::string("Paradox") + " " + ENGINE_VERSION)
 	{
@@ -39,6 +39,9 @@ namespace paradox
 		std::ifstream handle;
 		std::ios_base::iostate exceptionMask = handle.exceptions() | std::ios::failbit;
 		handle.exceptions(exceptionMask);
+
+		// Get the current window
+		auto window = WindowManager::getInstance()->getWindow();
 
 		try
 		{
@@ -54,21 +57,21 @@ namespace paradox
 		if (!data.empty())
 		{
 			// Create engine instance from the file settings
-			m_window.setPosition(sf::Vector2i(data["winPos"][0], data["winPos"][1]));
-			m_window.create(sf::VideoMode(data["winSize"][0], data["winSize"][1]), "Paradox");
+			window->setPosition(sf::Vector2i(data["winPos"][0], data["winPos"][1]));
+			window->create(sf::VideoMode(data["winSize"][0], data["winSize"][1]), "Paradox");
 			SceneManager::getInstance()->loadScene("meta/" + data["currentScene"].get<std::string>()); // Hardcoded meta folder
 		}
 		else
 		{
 			// Create engine instance with default settings
-			m_window.create(sf::VideoMode(800, 600), m_engineTitle);
+			window->create(sf::VideoMode(800, 600), m_engineTitle);
 		}
 
 		// Temp -> replace with setFramerateLimit?
-		m_window.setVerticalSyncEnabled(true);
+		window->setVerticalSyncEnabled(true);
 
 		// Init GUI and editor
-		ImGui::SFML::Init(m_window);
+		ImGui::SFML::Init(*window);
 
 		DockingManager::getInstance()->init();
 	}
@@ -84,21 +87,22 @@ namespace paradox
 	{
 		sf::Clock clock;
 		sf::Clock guiClock;
+		auto window = WindowManager::getInstance()->getWindow();
 
-		while (m_window.isOpen())
+		while (window->isOpen())
 		{
-			pollEvents();
+			pollEvents(*window);
 			update(clock.restart());
-			updateGUI(guiClock.restart());
-			render();
+			updateGUI(*window, guiClock.restart());
+			render(*window);
 		}
 	}
 
-	void Paradox::pollEvents()
+	void Paradox::pollEvents(sf::RenderWindow& window)
 	{
 		sf::Event event;
 		
-		while (m_window.pollEvent(event))
+		while (window.pollEvent(event))
 		{
 			ImGui::SFML::ProcessEvent(event);
 
@@ -107,15 +111,15 @@ namespace paradox
 			{
 				// Dump settings file
 				json settings;
-				settings["winPos"] = { m_window.getPosition().x, m_window.getPosition().y };
-				settings["winSize"] = { m_window.getSize().x, m_window.getSize().y };
+				settings["winPos"] = { window.getPosition().x, window.getPosition().y };
+				settings["winSize"] = { window.getSize().x, window.getSize().y };
 				settings["currentScene"] = SceneManager::getInstance()->getSceneName();
 
 				std::ofstream o("meta/paradox.ini");
 				o << std::setw(4) << settings << std::endl;
 				o.close();
 
-				m_window.close();
+				window.close();
 			}
 		}
 	}
@@ -126,10 +130,10 @@ namespace paradox
 		SceneManager::getInstance()->update();
 	}
 
-	void Paradox::updateGUI(sf::Time dt)
+	void Paradox::updateGUI(sf::RenderWindow& window, sf::Time dt)
 	{
 		// Update GUI
-		ImGui::SFML::Update(m_window, dt);
+		ImGui::SFML::Update(window, dt);
 
 		// TODO: move to separate editor class
 		if (ImGui::BeginMainMenuBar())
@@ -175,7 +179,7 @@ namespace paradox
 
 				if (ImGui::MenuItem("Quit", "Escape")) 
 				{ 
-					m_window.close(); 
+					window.close(); 
 				}
 
 				ImGui::EndMenu();
@@ -187,14 +191,14 @@ namespace paradox
 		DockingManager::getInstance()->draw();
 	}
 
-	void Paradox::render()
+	void Paradox::render(sf::RenderWindow& window)
 	{
-		m_window.setTitle(m_engineTitle + " - " + SceneManager::getInstance()->getSceneName());
-		m_window.clear();
+		window.setTitle(m_engineTitle + " - " + SceneManager::getInstance()->getSceneName());
+		window.clear();
 
 		// Render GUI in the application window
-		ImGui::SFML::Render(m_window);
+		ImGui::SFML::Render(window);
 
-		m_window.display();
+		window.display();
 	}
 }

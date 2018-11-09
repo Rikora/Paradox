@@ -13,7 +13,7 @@ namespace paradox
 	{
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		// Re-create scene texture if the docking size does not match
+		// Re-create scene texture if the docking size doesn't match
 		if (m_gameWindow.getSize() != sf::Vector2u(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y)))
 		{
 			m_gameWindow.create(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y));
