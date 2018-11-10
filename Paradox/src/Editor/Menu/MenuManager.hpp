@@ -11,7 +11,7 @@ namespace paradox
 {
 	enum class MenuID
 	{
-		File,
+		File
 	};
 
 	// Singleton instance
