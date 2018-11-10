@@ -156,6 +156,7 @@
     <ClCompile Include="src\Editor\Docking\Docks\GameDock.cpp" />
     <ClCompile Include="src\Editor\Docking\Docks\ProjectDock.cpp" />
     <ClCompile Include="src\Editor\Docking\Docks\SceneDock.cpp" />
+    <ClCompile Include="src\Editor\Input\InputManager.cpp" />
     <ClCompile Include="src\GUI\imgui_dock.cpp" />
     <ClCompile Include="src\Editor\Menu\MenuManager.cpp" />
     <ClCompile Include="src\Editor\Menu\Submenus\FileMenu.cpp" />
@@ -176,6 +177,8 @@
     <ClInclude Include="src\Editor\Docking\Docks\GameDock.hpp" />
     <ClInclude Include="src\Editor\Docking\Docks\ProjectDock.hpp" />
     <ClInclude Include="src\Editor\Docking\Docks\SceneDock.hpp" />
+    <ClInclude Include="src\Editor\Input\EditorEvent.hpp" />
+    <ClInclude Include="src\Editor\Input\InputManager.hpp" />
     <ClInclude Include="src\Editor\Menu\Menu.hpp" />
     <ClInclude Include="src\Editor\Menu\MenuManager.hpp" />
     <ClInclude Include="src\Editor\Menu\Submenus\FileMenu.hpp" />

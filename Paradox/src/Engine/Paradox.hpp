@@ -3,9 +3,6 @@
 // SFML
 #include <SFML/Graphics/RenderWindow.hpp>
 
-// Thor
-#include <Thor/Input/ActionMap.hpp>
-
 namespace paradox
 {
 	class Paradox
@@ -23,6 +20,5 @@ namespace paradox
 		void render(sf::RenderWindow& window);
 
 		std::string m_engineTitle;
-		thor::ActionMap<std::string> m_actions;
 	};
 }

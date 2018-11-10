@@ -1,8 +1,5 @@
 #pragma once
 
-// SFML
-#include <SFML/Window/Event.hpp>
-
 namespace paradox
 {
 	// Menu base class
@@ -11,8 +8,7 @@ namespace paradox
 	public:
 		virtual ~Menu() {}
 
-		//virtual void pollEvents(const sf::Event& event) = 0;
-		//virtual void update() = 0;
+		virtual void pollEvents() = 0;
 		virtual void draw() = 0;
 	};
 }

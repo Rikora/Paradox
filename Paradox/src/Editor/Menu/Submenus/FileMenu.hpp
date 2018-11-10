@@ -8,10 +8,10 @@ namespace paradox
 	class FileMenu final : public Menu
 	{
 	public:
+		FileMenu();
 		~FileMenu() = default;
 
-		//virtual void pollEvents(const sf::Event& event) override;
-		//virtual void update() override;
+		virtual void pollEvents() override;
 		virtual void draw() override;
 
 	private:

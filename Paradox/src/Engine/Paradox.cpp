@@ -6,15 +6,12 @@
 #include <iostream>
 #include <sstream>
 
-// SFML
-#include <SFML/Window/Event.hpp>
-
 // Paradox
 #include <Window/WindowManager.hpp>
 #include <Editor/Docking/DockingManager.hpp>
 #include <Editor/Menu/MenuManager.hpp>
+#include <Editor/Input/InputManager.hpp>
 #include <System/Scene/SceneManager.hpp>
-
 
 // ImGUI
 #include <imgui/imgui.h>
@@ -76,10 +73,6 @@ namespace paradox
 
 		DockingManager::getInstance()->init();
 		MenuManager::getInstance()->init();
-
-		// Test for actions
-		/*thor::Action save(sf::Keyboard::S, thor::Action::PressOnce);
-		m_actions["save"] = save;*/
 	}
 
 	Paradox::~Paradox()
@@ -107,14 +100,15 @@ namespace paradox
 	void Paradox::pollEvents(sf::RenderWindow& window)
 	{
 		// Clear from previous actions
-		//m_actions.clearEvents();
+		auto editorEvent = InputManager::getInstance();
+		editorEvent->clearEvents();
 
 		sf::Event event;
 		
 		while (window.pollEvent(event))
 		{
 			ImGui::SFML::ProcessEvent(event);
-			m_actions.pushEvent(event);
+			editorEvent->pushEvent(event);
 
 			// Exit application
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
@@ -133,10 +127,7 @@ namespace paradox
 			}
 		}
 
-		/*if (m_actions.isActive("save"))
-		{
-			std::cout << "Hello world" << std::endl;
-		}*/
+		MenuManager::getInstance()->pollEvents();
 	}
 
 	void Paradox::update(sf::Time dt)
