@@ -9,22 +9,22 @@
 namespace paradox
 {	
 	// Singleton instance
-	class InputManager
+	class EditorInputManager
 	{
 	private:
-		InputManager() = default;
-		~InputManager() = default;
-		InputManager(const InputManager&) {}
-		InputManager& operator = (const InputManager&) {}
-		InputManager(const InputManager&&) {}
-		InputManager& operator = (const InputManager&&) {}
+		EditorInputManager() = default;
+		~EditorInputManager() = default;
+		EditorInputManager(const EditorInputManager&) {}
+		EditorInputManager& operator = (const EditorInputManager&) {}
+		EditorInputManager(const EditorInputManager&&) {}
+		EditorInputManager& operator = (const EditorInputManager&&) {}
 
 	public:
 		void addEvent(EditorEvent eventType, const thor::Action& action);
 		void clearEvents();
 		void pushEvent(const sf::Event& event);
 		bool isActive(EditorEvent eventType);
-		static InputManager* getInstance();
+		static EditorInputManager* getInstance();
 
 	private:
 		thor::ActionMap<EditorEvent> m_actions;

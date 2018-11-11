@@ -11,6 +11,7 @@ namespace paradox
 	public:
 		virtual ~Dock() {}
 
+		virtual void pollEvents() {}
 		virtual void update() {};
 		virtual void draw() {};
 		virtual void draw(const sf::Color& color) {}

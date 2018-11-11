@@ -34,6 +34,14 @@ namespace paradox
 		m_docks.insert(std::make_pair(DockID::Project, std::make_unique<ProjectDock>(folderIcon)));
 	}
 
+	void DockingManager::pollEvents()
+	{
+		for (const auto& dock : m_docks)
+		{
+			dock.second->pollEvents();
+		}
+	}
+
 	void DockingManager::draw()
 	{
 		// Docking system
@@ -82,7 +90,7 @@ namespace paradox
 			{
 				const auto dock = m_docks.find(DockID::Project);
 
-				dock->second->update();
+				//dock->second->update();
 				dock->second->draw();
 			}
 			ImGui::EndDock();

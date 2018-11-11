@@ -69,7 +69,7 @@
     <ClCompile Include="src\GUI\imgui_dock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\Input\InputManager.cpp">
+    <ClCompile Include="src\Editor\Input\EditorInputManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,10 +131,10 @@
     <ClInclude Include="src\Editor\Menu\MenuManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Input\InputManager.hpp">
+    <ClInclude Include="src\Editor\Input\EditorEvent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\Input\EditorEvent.hpp">
+    <ClInclude Include="src\Editor\Input\EditorInputManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

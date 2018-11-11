@@ -2,7 +2,7 @@
 
 // Paradox
 #include <Window/WindowManager.hpp>
-#include <Editor/Input/InputManager.hpp>
+#include <Editor/Input/EditorInputManager.hpp>
 #include <System/Scene/SceneManager.hpp>
 #include <System/File/FileSystem.hpp>
 
@@ -14,7 +14,7 @@ namespace paradox
 	FileMenu::FileMenu()
 	{
 		// Add input events
-		auto editorEvent = InputManager::getInstance();
+		auto editorEvent = EditorInputManager::getInstance();
 
 		const thor::Action ctrl(sf::Keyboard::LControl, thor::Action::Hold);
 		const thor::Action alt(sf::Keyboard::LAlt, thor::Action::Hold);
@@ -30,7 +30,7 @@ namespace paradox
 
 	void FileMenu::pollEvents()
 	{
-		auto editorEvent = InputManager::getInstance();
+		auto editorEvent = EditorInputManager::getInstance();
 
 		// Check for input events
 		if (editorEvent->isActive(EditorEvent::NewScene))

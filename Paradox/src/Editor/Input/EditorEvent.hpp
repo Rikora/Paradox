@@ -8,6 +8,8 @@ namespace paradox
 		NewScene,
 		OpenScene,
 		SaveScene,
-		SaveSceneAs
+		SaveSceneAs,
+		Exit,
+		DeleteProjectFileFolder
 	};
 }

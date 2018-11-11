@@ -10,7 +10,7 @@
 #include <Window/WindowManager.hpp>
 #include <Editor/Docking/DockingManager.hpp>
 #include <Editor/Menu/MenuManager.hpp>
-#include <Editor/Input/InputManager.hpp>
+#include <Editor/Input/EditorInputManager.hpp>
 #include <System/Scene/SceneManager.hpp>
 
 // ImGUI
@@ -73,6 +73,10 @@ namespace paradox
 
 		DockingManager::getInstance()->init();
 		MenuManager::getInstance()->init();
+
+		// Escape should be removed afterwards
+		EditorInputManager::getInstance()->addEvent(EditorEvent::Exit, thor::Action(sf::Event::Closed) 
+			|| thor::Action(sf::Keyboard::Escape, thor::Action::PressOnce));
 	}
 
 	Paradox::~Paradox()
@@ -100,7 +104,7 @@ namespace paradox
 	void Paradox::pollEvents(sf::RenderWindow& window)
 	{
 		// Clear from previous actions
-		auto editorEvent = InputManager::getInstance();
+		auto editorEvent = EditorInputManager::getInstance();
 		editorEvent->clearEvents();
 
 		sf::Event event;
@@ -109,25 +113,26 @@ namespace paradox
 		{
 			ImGui::SFML::ProcessEvent(event);
 			editorEvent->pushEvent(event);
+		}
 
-			// Exit application
-			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-			{
-				// Dump settings file
-				json settings;
-				settings["winPos"] = { window.getPosition().x, window.getPosition().y };
-				settings["winSize"] = { window.getSize().x, window.getSize().y };
-				settings["currentScene"] = SceneManager::getInstance()->getSceneName();
+		// Exit application
+		if (editorEvent->isActive(EditorEvent::Exit))
+		{
+			// Dump settings file
+			json settings;
+			settings["winPos"] = { window.getPosition().x, window.getPosition().y };
+			settings["winSize"] = { window.getSize().x, window.getSize().y };
+			settings["currentScene"] = SceneManager::getInstance()->getSceneName();
 
-				std::ofstream o("meta/paradox.ini");
-				o << std::setw(4) << settings << std::endl;
-				o.close();
+			std::ofstream o("meta/paradox.ini");
+			o << std::setw(4) << settings << std::endl;
+			o.close();
 
-				window.close();
-			}
+			window.close();
 		}
 
 		MenuManager::getInstance()->pollEvents();
+		DockingManager::getInstance()->pollEvents();
 	}
 
 	void Paradox::update(sf::Time dt)

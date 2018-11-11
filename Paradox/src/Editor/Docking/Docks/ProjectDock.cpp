@@ -1,7 +1,7 @@
 #include <Editor/Docking/Docks/ProjectDock.hpp>
 
-// SFML
-#include <SFML/Window/Keyboard.hpp>
+// Paradox
+#include <Editor/Input/EditorInputManager.hpp>
 
 // ImGui
 #include <imgui/imgui.h>
@@ -14,14 +14,16 @@ namespace paradox
 	m_selected(false),
 	m_folderIcon(sprite)
 	{
+		// Add input events
+		EditorInputManager::getInstance()->addEvent(EditorEvent::DeleteProjectFileFolder, thor::Action(sf::Keyboard::Delete));
 	}
 
-	void ProjectDock::update()
+	void ProjectDock::pollEvents()
 	{
 		if (m_selected)
 		{
-			// Delete folder and its contents
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete))
+			// Delete folder/file and its contents
+			if (EditorInputManager::getInstance()->isActive(EditorEvent::DeleteProjectFileFolder))
 			{
 				if (fs::exists(m_selectedNode))
 				{
@@ -29,6 +31,11 @@ namespace paradox
 				}
 			}
 		}
+	}
+
+	void ProjectDock::update()
+	{
+		// Empty
 	}
 
 	void ProjectDock::draw()

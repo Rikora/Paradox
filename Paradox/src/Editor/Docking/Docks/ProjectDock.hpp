@@ -19,6 +19,7 @@ namespace paradox
 		ProjectDock(const sf::Sprite& sprite);
 		~ProjectDock() = default;
 
+		virtual void pollEvents() override;
 		virtual void update() override;
 		virtual void draw() override;
 		void setProjectPath(const std::string& path);
