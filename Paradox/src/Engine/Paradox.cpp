@@ -31,7 +31,7 @@ namespace paradox
 	const double dt = 1.0 / 60.0;
 
 	Paradox::Paradox() :
-	m_engineTitle(std::string("Paradox") + " " + ENGINE_VERSION)
+	m_engineTitle(std::string("Paradox") + " " + ENGINE_VERSION + " (64bit)")
 	{
 		// Get settings for the current instance of the engine
 		json data;

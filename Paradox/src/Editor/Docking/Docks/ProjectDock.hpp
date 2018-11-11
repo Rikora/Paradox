@@ -33,6 +33,7 @@ namespace paradox
 		std::string m_projectPath;
 		std::string m_selectedNode;
 		sf::Sprite m_folderIcon;
+		sf::Sprite m_luaIcon;
 		bool m_selected;
 	};
 }

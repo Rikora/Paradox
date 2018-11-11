@@ -15,7 +15,10 @@ namespace paradox
 	m_selected(false)
 	{
 		// Set textures for icons
-		m_folderIcon.setTexture(EditorResourceManager::getInstance()->getTexture(EditorResource::FolderIcon));
+		auto editorResource = EditorResourceManager::getInstance();
+
+		m_folderIcon.setTexture(editorResource->getTexture(EditorResource::FolderIcon));
+		m_luaIcon.setTexture(editorResource->getTexture(EditorResource::LuaIcon));
 
 		// Add input events
 		EditorInputManager::getInstance()->addEvent(EditorEvent::DeleteProjectFileFolder, thor::Action(sf::Keyboard::Delete));
@@ -105,15 +108,19 @@ namespace paradox
 						(m_selectedNode == entry.path().u8string() ? ImGuiTreeNodeFlags_Selected : 0);
 
 					// Icons for file extensions
-					/*auto extension = clickedNode.substr(clickedNode.find_last_of("."));
+					auto extension = filename.u8string().substr(filename.u8string().find_last_of("."));
 
 					if (extension == ".lua")
 					{
-					}*/
-					//...
-					ImGui::Image(m_folderIcon); // Placeholder icon
-					ImGui::SameLine();
-					//
+						ImGui::Image(m_luaIcon);
+						ImGui::SameLine();
+					}
+					else
+					{
+						// Placeholder icon for others
+						ImGui::Image(m_folderIcon);
+						ImGui::SameLine();
+					}
 
 					bool nodeOpen = ImGui::TreeNodeEx(filename.u8string().c_str(), nodeFlags);
 
