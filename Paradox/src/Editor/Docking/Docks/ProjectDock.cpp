@@ -1,5 +1,8 @@
 #include <Editor/Docking/Docks/ProjectDock.hpp>
 
+// C++
+#include <fstream>
+
 // Paradox
 #include <Editor/Resource/EditorResourceManager.hpp>
 #include <Editor/Input/EditorInputManager.hpp>
@@ -166,9 +169,15 @@ namespace paradox
 				// TODO: add more menu options
 				if (ImGui::MenuItem("Folder"))
 				{
-					// TODO: add ability to create multiple directories at the same time
-					// without the need to rename each before continuing
 					fs::create_directory(m_selectedNode + "/NewFolder");
+				}
+
+				ImGui::Image(m_luaIcon);
+				ImGui::SameLine();
+
+				if (ImGui::MenuItem("Lua Script"))
+				{
+					std::ofstream(m_selectedNode + "/NewScript.lua");
 				}
 
 				ImGui::EndMenu();
