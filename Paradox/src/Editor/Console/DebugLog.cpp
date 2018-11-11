@@ -1,15 +1,11 @@
-#include <Editor/DebugLog.hpp>
+#include <Editor/Console/DebugLog.hpp>
 
 // C++
 #include <string>
 
 namespace paradox
 {
-	ImGuiTextBuffer DebugLog::m_buffer;
-	ImVector<int> DebugLog::m_lineOffsets;
-	bool DebugLog::m_scrollToBottom;
-
-	void DebugLog::log(const char * fmt, ...)
+	void DebugLog::log(const char* fmt, ...)
 	{
 		// TODO: Ignore \n from user input or else the console layout will be a disaster
 		// TODO: Change the default font for the console
@@ -34,7 +30,7 @@ namespace paradox
 		}
 
 		m_scrollToBottom = true;
-	}
+	}	
 
 	void DebugLog::draw()
 	{
@@ -45,7 +41,7 @@ namespace paradox
 		ImGui::Separator();
 		ImGui::Spacing();
 
-		ImGui::BeginChild("Scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar); // Horizontal scroll not really needed?	
+		ImGui::BeginChild("Scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 		ImGui::TextUnformatted(m_buffer.begin());
 
 		if (m_scrollToBottom)
@@ -61,5 +57,12 @@ namespace paradox
 	{
 		m_buffer.clear(); 
 		m_lineOffsets.clear();
+	}
+
+	DebugLog* DebugLog::getInstance()
+	{
+		static DebugLog instance;
+
+		return &instance;
 	}
 }

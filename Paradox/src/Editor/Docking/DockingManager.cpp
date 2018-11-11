@@ -1,10 +1,13 @@
 #include <Editor/Docking/DockingManager.hpp>
 
 // Paradox
-#include <Editor/DebugLog.hpp>
+#include <Editor/Docking/Docks/ConsoleDock.hpp>
 #include <Editor/Docking/Docks/ProjectDock.hpp>
 #include <Editor/Docking/Docks/SceneDock.hpp>
 #include <Editor/Docking/Docks/GameDock.hpp>
+
+// Test
+#include <Editor/Console/DebugLog.hpp>
 
 // ImGui
 #include <imgui/imgui.h>
@@ -18,13 +21,16 @@ namespace paradox
 		ImGui::InitDock();
 
 		// Log test
-		DebugLog::log("Hello world");
-		DebugLog::log("Hello world again");
+		auto console = DebugLog::getInstance();
+
+		console->log("Hello world");
+		console->log("Hello world again");
 
 		// Add docks to the container
 		m_docks.insert(std::make_pair(DockID::Scene, std::make_unique<SceneDock>()));
 		m_docks.insert(std::make_pair(DockID::Game, std::make_unique<GameDock>()));
 		m_docks.insert(std::make_pair(DockID::Project, std::make_unique<ProjectDock>()));
+		m_docks.insert(std::make_pair(DockID::Console, std::make_unique<ConsoleDock>()));
 	}
 
 	void DockingManager::pollEvents()
@@ -88,10 +94,11 @@ namespace paradox
 			}
 			ImGui::EndDock();
 
-			if (ImGui::BeginDock("Log"))
+			if (ImGui::BeginDock("Console"))
 			{
-				// TODO: move debuglog into separate dock class
-				DebugLog::draw();
+				const auto dock = m_docks.find(DockID::Console);
+
+				dock->second->draw();
 
 				ImGui::Separator();
 			}

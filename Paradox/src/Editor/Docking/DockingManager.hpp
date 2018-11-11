@@ -13,7 +13,8 @@ namespace paradox
 	{
 		Scene,
 		Game,
-		Project
+		Project,
+		Console
 	};
 
 	// Singleton instance

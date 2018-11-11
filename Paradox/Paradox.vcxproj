@@ -151,8 +151,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\App\main.cpp" />
-    <ClCompile Include="src\Editor\DebugLog.cpp" />
+    <ClCompile Include="src\Editor\Console\DebugLog.cpp" />
     <ClCompile Include="src\Editor\Docking\DockingManager.cpp" />
+    <ClCompile Include="src\Editor\Docking\Docks\ConsoleDock.cpp" />
     <ClCompile Include="src\Editor\Docking\Docks\GameDock.cpp" />
     <ClCompile Include="src\Editor\Docking\Docks\ProjectDock.cpp" />
     <ClCompile Include="src\Editor\Docking\Docks\SceneDock.cpp" />
@@ -172,9 +173,10 @@
     <ClCompile Include="src\Window\WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Editor\DebugLog.hpp" />
+    <ClInclude Include="src\Editor\Console\DebugLog.hpp" />
     <ClInclude Include="src\Editor\Docking\Dock.hpp" />
     <ClInclude Include="src\Editor\Docking\DockingManager.hpp" />
+    <ClInclude Include="src\Editor\Docking\Docks\ConsoleDock.hpp" />
     <ClInclude Include="src\Editor\Docking\Docks\GameDock.hpp" />
     <ClInclude Include="src\Editor\Docking\Docks\ProjectDock.hpp" />
     <ClInclude Include="src\Editor\Docking\Docks\SceneDock.hpp" />

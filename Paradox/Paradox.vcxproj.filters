@@ -30,9 +30,6 @@
     <ClCompile Include="src\GUI\imgui-SFML.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\DebugLog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\System\Logic\TransformSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,12 +72,15 @@
     <ClCompile Include="src\Editor\Resource\EditorResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\Docking\Docks\ConsoleDock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\Console\DebugLog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Paradox.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\DebugLog.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\System\Component\Transform.hpp">
@@ -144,6 +144,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\Resource\EditorResource.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\Docking\Docks\ConsoleDock.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\Console\DebugLog.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
