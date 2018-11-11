@@ -10,6 +10,8 @@ namespace paradox
 		SaveScene,
 		SaveSceneAs,
 		Exit,
-		DeleteProjectFileFolder
+		DeleteProjectFileFolder,
+		MiddleMousePress,
+		MouseStrafing
 	};
 }
