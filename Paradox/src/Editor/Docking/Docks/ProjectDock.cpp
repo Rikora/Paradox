@@ -1,6 +1,7 @@
 #include <Editor/Docking/Docks/ProjectDock.hpp>
 
 // Paradox
+#include <Editor/Resource/EditorResourceManager.hpp>
 #include <Editor/Input/EditorInputManager.hpp>
 
 // ImGui
@@ -9,11 +10,13 @@
 
 namespace paradox
 {
-	ProjectDock::ProjectDock(const sf::Sprite& sprite) :
+	ProjectDock::ProjectDock() :
 	m_projectPath("E:/Paradox/Paradox/project"), // Hardcoded project path (will change when projects can be created)
-	m_selected(false),
-	m_folderIcon(sprite)
+	m_selected(false)
 	{
+		// Set textures for icons
+		m_folderIcon.setTexture(EditorResourceManager::getInstance()->getTexture(EditorResource::FolderIcon));
+
 		// Add input events
 		EditorInputManager::getInstance()->addEvent(EditorEvent::DeleteProjectFileFolder, thor::Action(sf::Keyboard::Delete));
 	}

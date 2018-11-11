@@ -17,13 +17,6 @@ namespace paradox
 		// Init docking system
 		ImGui::InitDock();
 
-		// TODO: resource handling should be handled by an internal resource manager
-		sf::Sprite folderIcon;
-		if (m_folderTexture.loadFromFile("res/Icons/folder.png"))
-		{
-			folderIcon.setTexture(m_folderTexture);
-		}
-
 		// Log test
 		DebugLog::log("Hello world");
 		DebugLog::log("Hello world again");
@@ -31,7 +24,7 @@ namespace paradox
 		// Add docks to the container
 		m_docks.insert(std::make_pair(DockID::Scene, std::make_unique<SceneDock>()));
 		m_docks.insert(std::make_pair(DockID::Game, std::make_unique<GameDock>()));
-		m_docks.insert(std::make_pair(DockID::Project, std::make_unique<ProjectDock>(folderIcon)));
+		m_docks.insert(std::make_pair(DockID::Project, std::make_unique<ProjectDock>()));
 	}
 
 	void DockingManager::pollEvents()

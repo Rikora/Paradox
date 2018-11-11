@@ -16,7 +16,7 @@ namespace paradox
 	class ProjectDock final : public Dock
 	{
 	public:
-		ProjectDock(const sf::Sprite& sprite);
+		ProjectDock();
 		~ProjectDock() = default;
 
 		virtual void pollEvents() override;
@@ -33,9 +33,7 @@ namespace paradox
 	private:
 		std::string m_projectPath;
 		std::string m_selectedNode;
-		bool m_selected;
-
-		// Temp placement for sprites
 		sf::Sprite m_folderIcon;
+		bool m_selected;
 	};
 }

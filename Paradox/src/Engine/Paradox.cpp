@@ -8,12 +8,13 @@
 
 // Paradox
 #include <Window/WindowManager.hpp>
+#include <Editor/Resource/EditorResourceManager.hpp>
 #include <Editor/Docking/DockingManager.hpp>
 #include <Editor/Menu/MenuManager.hpp>
 #include <Editor/Input/EditorInputManager.hpp>
 #include <System/Scene/SceneManager.hpp>
 
-// ImGUI
+// ImGui
 #include <imgui/imgui.h>
 #include <imgui/imgui-SFML.h>
 
@@ -71,6 +72,7 @@ namespace paradox
 		// Init GUI and editor systems
 		ImGui::SFML::Init(*window);
 
+		EditorResourceManager::getInstance()->init();
 		DockingManager::getInstance()->init();
 		MenuManager::getInstance()->init();
 

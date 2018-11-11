@@ -4,9 +4,6 @@
 #include <memory>
 #include <unordered_map>
 
-// SFML
-#include <SFML/Graphics/Texture.hpp>
-
 // Paradox
 #include <Editor/Docking/Dock.hpp>
 
@@ -38,8 +35,5 @@ namespace paradox
 
 	private:
 		std::unordered_map<DockID, std::unique_ptr<Dock>> m_docks;
-
-		// Temp
-		sf::Texture m_folderTexture;
 	};
 }
