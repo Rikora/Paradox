@@ -36,11 +36,6 @@ namespace paradox
 		}
 	}
 
-	void ProjectDock::update()
-	{
-		// Empty
-	}
-
 	void ProjectDock::draw()
 	{
 		listProjectDirectory(m_projectPath);

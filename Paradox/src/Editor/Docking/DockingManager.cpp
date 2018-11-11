@@ -89,7 +89,6 @@ namespace paradox
 			{
 				const auto dock = m_docks.find(DockID::Project);
 
-				//dock->second->update();
 				dock->second->draw();
 			}
 			ImGui::EndDock();

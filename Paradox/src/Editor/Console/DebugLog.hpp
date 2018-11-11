@@ -1,6 +1,6 @@
 #pragma once
 
-// ImGUI
+// ImGui
 #include <imgui/imgui.h>
 
 namespace paradox

@@ -8,6 +8,7 @@
 
 namespace paradox
 {
+	// TODO: save current view pos to file
 	class SceneDock final : public Dock
 	{
 	public:
@@ -22,8 +23,8 @@ namespace paradox
 		sf::RenderTexture m_sceneWindow;
 		sf::View m_sceneView;
 		sf::Vector2f m_currentMousePos;
-		sf::Vector2f m_relativeMousePos;
 		sf::Vector2f m_previousMousePos;
+		sf::Vector2f m_relativeMousePos;
 		bool m_isFocused;
 	};
 }

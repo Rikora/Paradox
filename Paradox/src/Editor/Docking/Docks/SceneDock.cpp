@@ -13,15 +13,18 @@ namespace paradox
 	SceneDock::SceneDock() :
 	m_isFocused(false)
 	{
-		// TODO: save current view pos to file
-		EditorInputManager::getInstance()->addEvent(EditorEvent::MiddleMousePress, thor::Action(sf::Mouse::Middle, thor::Action::PressOnce));
-		EditorInputManager::getInstance()->addEvent(EditorEvent::MouseStrafing, thor::Action(sf::Mouse::Middle, thor::Action::Hold));
+		auto editorEvent = EditorInputManager::getInstance();
+
+		editorEvent->addEvent(EditorEvent::MiddleMousePress, thor::Action(sf::Mouse::Middle, thor::Action::PressOnce));
+		editorEvent->addEvent(EditorEvent::MouseStrafing, thor::Action(sf::Mouse::Middle, thor::Action::Hold));
 	}
 
 	void SceneDock::pollEvents()
 	{
+		auto editorEvent = EditorInputManager::getInstance();
+
 		// Get cursor start position
-		if (EditorInputManager::getInstance()->isActive(EditorEvent::MiddleMousePress))
+		if (editorEvent->isActive(EditorEvent::MiddleMousePress))
 		{
 			m_currentMousePos = m_relativeMousePos;
 		}
@@ -30,7 +33,7 @@ namespace paradox
 		m_previousMousePos = m_currentMousePos;
 
 		// Check for strafing
-		if (EditorInputManager::getInstance()->isActive(EditorEvent::MouseStrafing) && m_isFocused)
+		if (editorEvent->isActive(EditorEvent::MouseStrafing) && m_isFocused)
 		{
 			m_currentMousePos = m_relativeMousePos;
 			const auto delta = sf::Vector2f(m_currentMousePos.x - m_previousMousePos.x, m_previousMousePos.y - m_currentMousePos.y);
