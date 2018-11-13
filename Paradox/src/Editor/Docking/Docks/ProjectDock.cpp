@@ -79,8 +79,6 @@ namespace paradox
 					ImGui::Image(m_folderIcon);
 					ImGui::SameLine();
 
-					// Might need to worry about id later on, but we will see...
-					//ImGui::PushID(filename.u8string().c_str());
 					bool nodeOpen = ImGui::TreeNodeEx(filename.u8string().c_str(), nodeFlags);
 
 					if (ImGui::IsItemClicked())
@@ -103,13 +101,9 @@ namespace paradox
 					}
 
 					ImGui::PopStyleVar();
-					//ImGui::PopID();
 				}
 				else if (fs::is_regular_file(entry.status())) // Files
 				{
-					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet |
-						(m_selectedNode == entry.path().u8string() ? ImGuiTreeNodeFlags_Selected : 0);
-
 					// Icons for file extensions
 					auto extension = filename.u8string().substr(filename.u8string().find_last_of("."));
 
@@ -125,7 +119,7 @@ namespace paradox
 						ImGui::SameLine();
 					}
 
-					bool nodeOpen = ImGui::TreeNodeEx(filename.u8string().c_str(), nodeFlags);
+					ImGui::Selectable(filename.u8string().c_str(), (m_selectedNode == entry.path().u8string() ? true : false));
 
 					if (ImGui::IsItemClicked())
 					{
@@ -142,11 +136,6 @@ namespace paradox
 
 					// File popup
 					filePopup();
-
-					if (nodeOpen)
-					{
-						ImGui::TreePop();
-					}
 				}
 			}
 		}
@@ -264,6 +253,7 @@ namespace paradox
 					if (!fs::exists(newPath))
 					{
 						fs::rename(m_selectedNode, newPath);
+						ImGui::CloseCurrentPopup();
 					}
 
 					// Reset input buffer
