@@ -75,10 +75,6 @@ namespace paradox
 		EditorResourceManager::getInstance()->init();
 		DockingManager::getInstance()->init();
 		MenuManager::getInstance()->init();
-
-		// Escape should be removed afterwards
-		EditorInputManager::getInstance()->addEvent(EditorEvent::Exit, thor::Action(sf::Event::Closed) 
-			|| thor::Action(sf::Keyboard::Escape, thor::Action::PressOnce));
 	}
 
 	Paradox::~Paradox()
@@ -115,22 +111,6 @@ namespace paradox
 		{
 			ImGui::SFML::ProcessEvent(event);
 			editorEvent->pushEvent(event);
-		}
-
-		// Exit application
-		if (editorEvent->isActive(EditorEvent::Exit))
-		{
-			// Dump settings file
-			json settings;
-			settings["winPos"] = { window.getPosition().x, window.getPosition().y };
-			settings["winSize"] = { window.getSize().x, window.getSize().y };
-			settings["currentScene"] = SceneManager::getInstance()->getSceneName();
-
-			std::ofstream o("meta/paradox.ini");
-			o << std::setw(4) << settings << std::endl;
-			o.close();
-
-			window.close();
 		}
 
 		MenuManager::getInstance()->pollEvents();

@@ -13,8 +13,8 @@ namespace paradox
 	public:
 		~GameDock() = default;
 
-		virtual void update() override;
-		virtual void draw(const sf::Color& color) override;
+		void update() override;
+		void draw(const sf::Color& color) override;
 
 	private:
 		sf::RenderTexture m_gameWindow;

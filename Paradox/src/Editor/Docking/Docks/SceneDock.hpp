@@ -15,9 +15,9 @@ namespace paradox
 		SceneDock();
 		~SceneDock() = default;
 
-		virtual void pollEvents() override;
-		virtual void update() override;
-		virtual void draw(const sf::Color& color) override;
+		void pollEvents() override;
+		void update() override;
+		void draw(const sf::Color& color) override;
 
 	private:
 		sf::RenderTexture m_sceneWindow;

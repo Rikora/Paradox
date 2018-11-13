@@ -10,6 +10,6 @@ namespace paradox
 	public:
 		~ConsoleDock() = default;
 
-		virtual void draw() override;
+		void draw() override;
 	};
 }

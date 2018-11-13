@@ -19,8 +19,8 @@ namespace paradox
 		ProjectDock();
 		~ProjectDock() = default;
 
-		virtual void pollEvents() override;
-		virtual void draw() override;
+		void pollEvents() override;
+		void draw() override;
 		void setProjectPath(const std::string& path);
 		std::string getProjectPath() const;
 

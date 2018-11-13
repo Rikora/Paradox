@@ -11,8 +11,8 @@ namespace paradox
 		FileMenu();
 		~FileMenu() = default;
 
-		virtual void pollEvents() override;
-		virtual void draw() override;
+		void pollEvents() override;
+		void draw() override;
 
 	private:
 		void newScene();

@@ -175,6 +175,7 @@ namespace paradox
 				ImGui::Image(m_luaIcon);
 				ImGui::SameLine();
 
+				// TODO: fill new script with standard layout
 				if (ImGui::MenuItem("Lua Script"))
 				{
 					std::ofstream(m_selectedNode + "/NewScript.lua");

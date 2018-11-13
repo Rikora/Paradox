@@ -1,5 +1,9 @@
 #include <Editor/Menu/Submenus/FileMenu.hpp>
 
+// C++
+#include <fstream>
+#include <iomanip>
+
 // Paradox
 #include <Window/WindowManager.hpp>
 #include <Editor/Input/EditorInputManager.hpp>
@@ -8,6 +12,11 @@
 
 // ImGui
 #include <imgui/imgui.h>
+
+// Json
+#include <json/json.hpp>
+
+using namespace nlohmann;
 
 namespace paradox 
 {
@@ -18,6 +27,7 @@ namespace paradox
 
 		const thor::Action ctrl(sf::Keyboard::LControl, thor::Action::Hold);
 		const thor::Action alt(sf::Keyboard::LAlt, thor::Action::Hold);
+		const thor::Action esc(sf::Keyboard::Escape, thor::Action::PressOnce);
 		const thor::Action n(sf::Keyboard::N, thor::Action::PressOnce);
 		const thor::Action o(sf::Keyboard::O, thor::Action::PressOnce);
 		const thor::Action s(sf::Keyboard::S, thor::Action::PressOnce);
@@ -26,6 +36,7 @@ namespace paradox
 		editorEvent->addEvent(EditorEvent::OpenScene, ctrl && o);
 		editorEvent->addEvent(EditorEvent::SaveScene, ctrl && s);
 		editorEvent->addEvent(EditorEvent::SaveSceneAs, ctrl && alt && s);
+		editorEvent->addEvent(EditorEvent::Exit, thor::Action(sf::Event::Closed) || esc);
 	}
 
 	void FileMenu::pollEvents()
@@ -51,6 +62,11 @@ namespace paradox
 		if (editorEvent->isActive(EditorEvent::SaveSceneAs))
 		{
 			saveSceneAs();
+		}
+
+		if (editorEvent->isActive(EditorEvent::Exit))
+		{
+			exit();
 		}
 	}
 
@@ -130,15 +146,18 @@ namespace paradox
 
 	void FileMenu::exit()
 	{
-		/*json settings;
-		settings["winPos"] = { window.getPosition().x, window.getPosition().y };
-		settings["winSize"] = { window.getSize().x, window.getSize().y };
+		auto window = WindowManager::getInstance()->getWindow();
+
+		// Dump instance data
+		json settings;
+		settings["winPos"] = { window->getPosition().x, window->getPosition().y };
+		settings["winSize"] = { window->getSize().x, window->getSize().y };
 		settings["currentScene"] = SceneManager::getInstance()->getSceneName();
 
 		std::ofstream o("meta/paradox.ini");
 		o << std::setw(4) << settings << std::endl;
-		o.close();*/
+		o.close();
 
-		WindowManager::getInstance()->getWindow()->close();
+		window->close();
 	}
 }
