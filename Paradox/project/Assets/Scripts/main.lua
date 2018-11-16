@@ -1,5 +1,5 @@
 -- Init scripts
-Example = require "example"
+Example = require "Scripts.example"
 
-test = Example:new("Just a test")
+test = Example:new("Just a test man")
 test:printMe()

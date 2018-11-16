@@ -1,5 +1,8 @@
 #pragma once
 
+// Sol
+//#include <sol/sol.hpp>
+
 // SFML
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -20,5 +23,6 @@ namespace paradox
 		void render(sf::RenderWindow& window);
 
 		std::string m_engineTitle;
+		//sol::state m_lua;
 	};
 }

@@ -1,4 +1,4 @@
-local class = require "include.middleclass"
+local class = require "Scripts.include.middleclass"
 
 -- Class name
 local Vector2 = class("Vector2")

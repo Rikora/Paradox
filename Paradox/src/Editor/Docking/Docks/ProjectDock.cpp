@@ -14,7 +14,7 @@
 namespace paradox
 {
 	ProjectDock::ProjectDock() :
-	m_projectPath("E:/Paradox/Paradox/project"), // Hardcoded project path (will change when projects can be created)
+	m_projectPath("E:/Paradox/Paradox/project/Assets"), // Hardcoded project path (will change when projects can be created)
 	m_selected(false)
 	{
 		// Set textures for icons
