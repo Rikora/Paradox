@@ -59,8 +59,9 @@ namespace paradox
 
 	void ProjectDock::listProjectDirectory(const fs::path& pathToShow)
 	{
-		// Folder popup
+		// Popups for folders and files
 		folderPopup();
+		filePopup();
 
 		// Iterate through the project directory and show folders and files
 		if (fs::exists(pathToShow) && fs::is_directory(pathToShow))
@@ -132,10 +133,7 @@ namespace paradox
 						m_selectedNode = entry.path().u8string();
 						m_selected = true;
 						ImGui::OpenPopup("Project_File_Popup");
-					}
-
-					// File popup
-					filePopup();
+					}					
 				}
 			}
 		}
