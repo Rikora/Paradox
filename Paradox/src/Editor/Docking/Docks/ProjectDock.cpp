@@ -1,6 +1,7 @@
 #include <Editor/Docking/Docks/ProjectDock.hpp>
 
 // C++
+#include <iostream>
 #include <fstream>
 
 // Paradox
@@ -19,32 +20,48 @@ namespace paradox
 	{
 		// Set textures for icons
 		auto editorResource = EditorResourceManager::getInstance();
+		auto editorEvent = EditorInputManager::getInstance();
 
 		m_folderIcon.setTexture(editorResource->getTexture(EditorResource::FolderIcon));
 		m_luaIcon.setTexture(editorResource->getTexture(EditorResource::LuaIcon));
 
 		// Add input events
-		EditorInputManager::getInstance()->addEvent(EditorEvent::DeleteProjectFileFolder, thor::Action(sf::Keyboard::Delete));
-	}
-
-	void ProjectDock::pollEvents()
-	{
-		if (m_selected)
-		{
-			// Delete folder/file and its contents
-			if (EditorInputManager::getInstance()->isActive(EditorEvent::DeleteProjectFileFolder))
-			{
-				if (fs::exists(m_selectedNode))
-				{
-					fs::remove_all(m_selectedNode);
-				}
-			}
-		}
+		editorEvent->addEvent(EditorEvent::Delete, thor::Action(sf::Keyboard::Delete));
+		editorEvent->addEvent(EditorEvent::RightMousePress, thor::Action(sf::Mouse::Right, thor::Action::PressOnce));
 	}
 
 	void ProjectDock::draw()
 	{
 		listProjectDirectory(m_projectPath);
+	}
+
+	void ProjectDock::update()
+	{
+		if (ImGui::IsMouseHoveringWindow())
+		{
+			if (m_selected)
+			{
+				if (EditorInputManager::getInstance()->isActive(EditorEvent::Delete))
+				{
+					if (fs::exists(m_selectedNode))
+					{
+						fs::remove_all(m_selectedNode);
+						deselect();	
+					}
+				}
+			}
+			else
+			{
+				// Temp solution: user have to deselect item before they can create a new item in 
+				// in the Asset folder
+				if (EditorInputManager::getInstance()->isActive(EditorEvent::RightMousePress))
+				{
+					ImGui::OpenPopup("Project_Popup");
+				}
+			}
+		}
+
+		projectPopup();
 	}
 
 	void ProjectDock::setProjectPath(const std::string& path)
@@ -73,7 +90,7 @@ namespace paradox
 				if (fs::is_directory(entry.status())) // Folders
 				{
 					ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
-						(m_selectedNode == entry.path().u8string() ? ImGuiTreeNodeFlags_Selected : 0);
+						(m_selectedNode == entry.path().u8string() && m_selected ? ImGuiTreeNodeFlags_Selected : 0);
 					ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 2.5f);
 
 					// Folder icon
@@ -84,8 +101,15 @@ namespace paradox
 
 					if (ImGui::IsItemClicked())
 					{
-						m_selectedNode = entry.path().u8string();
-						m_selected = true;
+						if (m_selectedNode != entry.path().u8string())
+						{
+							m_selectedNode = entry.path().u8string();
+							m_selected = true;
+						}
+						else
+						{
+							deselect();
+						}
 					}
 
 					if (ImGui::IsItemClicked(1))
@@ -120,12 +144,19 @@ namespace paradox
 						ImGui::SameLine();
 					}
 
-					ImGui::Selectable(filename.u8string().c_str(), (m_selectedNode == entry.path().u8string() ? true : false));
+					ImGui::Selectable(filename.u8string().c_str(), (m_selectedNode == entry.path().u8string() && m_selected ? true : false));
 
 					if (ImGui::IsItemClicked())
 					{
-						m_selectedNode = entry.path().u8string();
-						m_selected = true;
+						if (m_selectedNode != entry.path().u8string())
+						{
+							m_selectedNode = entry.path().u8string();
+							m_selected = true;
+						}
+						else
+						{
+							deselect();
+						}
 					}
 
 					if (ImGui::IsItemClicked(1))
@@ -133,9 +164,45 @@ namespace paradox
 						m_selectedNode = entry.path().u8string();
 						m_selected = true;
 						ImGui::OpenPopup("Project_File_Popup");
-					}					
+					}
 				}
 			}
+		}
+	}
+
+	void ProjectDock::projectPopup()
+	{
+		ImGui::SetNextWindowSize(ImVec2(100, 0));
+		if (ImGui::BeginPopup("Project_Popup"))
+		{
+			ImGui::Text("File");
+			ImGui::Separator();
+
+			// Add folder/file
+			if (ImGui::BeginMenu("Add"))
+			{
+				ImGui::Image(m_folderIcon);
+				ImGui::SameLine();
+
+				// TODO: add more menu options
+				if (ImGui::MenuItem("Folder"))
+				{
+					fs::create_directory(m_projectPath + "/NewFolder");
+				}
+
+				ImGui::Image(m_luaIcon);
+				ImGui::SameLine();
+
+				// TODO: fill new script with standard layout
+				if (ImGui::MenuItem("Lua Script"))
+				{
+					std::ofstream(m_projectPath + "/NewScript.lua");
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndPopup();
 		}
 	}
 
@@ -177,6 +244,7 @@ namespace paradox
 				if (fs::exists(m_selectedNode))
 				{
 					fs::remove_all(m_selectedNode);
+					deselect();
 				}
 			}
 
@@ -227,6 +295,7 @@ namespace paradox
 				if (fs::exists(m_selectedNode))
 				{
 					fs::remove_all(m_selectedNode);
+					deselect();
 				}
 			}
 
@@ -264,5 +333,11 @@ namespace paradox
 
 			ImGui::EndPopup();
 		}
+	}
+
+	void ProjectDock::deselect()
+	{
+		m_selectedNode = "";
+		m_selected = false;
 	}
 }

@@ -2,6 +2,8 @@
 
 namespace paradox
 {
+	// TODO: add all events here instead for convenience
+
 	void EditorInputManager::addEvent(EditorEvent eventType, const thor::Action& action)
 	{
 		m_actions[eventType] = action;

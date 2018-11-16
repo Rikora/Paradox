@@ -19,6 +19,7 @@ namespace paradox
 		editorEvent->addEvent(EditorEvent::MouseStrafing, thor::Action(sf::Mouse::Middle, thor::Action::Hold));
 	}
 
+	// TODO: remove this and place in update instead
 	void SceneDock::pollEvents()
 	{
 		auto editorEvent = EditorInputManager::getInstance();

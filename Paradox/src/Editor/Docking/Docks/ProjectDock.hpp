@@ -19,15 +19,17 @@ namespace paradox
 		ProjectDock();
 		~ProjectDock() = default;
 
-		void pollEvents() override;
 		void draw() override;
+		void update() override;
 		void setProjectPath(const std::string& path);
 		std::string getProjectPath() const;
 
 	private:
 		void listProjectDirectory(const fs::path& pathToShow);
+		void projectPopup();
 		void folderPopup();
 		void filePopup();
+		void deselect();
 
 	private:
 		std::string m_projectPath;
