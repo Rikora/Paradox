@@ -1,8 +1,4 @@
-// Test for sol
 #include <Engine/Paradox.hpp>
-
-//#include <sol/sol.hpp>
-//#include <cassert>
 
 //#ifdef _WIN32
 //	#include <Windows.h>
@@ -14,16 +10,6 @@
 int main(int args, char* argv[])
 //#endif
 {
-	//std::cout << "=== opening a state ===" << std::endl;
-
-	//sol::state lua;
-
-	//// open some common libraries
-	//lua.open_libraries(sol::lib::base, sol::lib::package);
-	//lua.script("print('bark bark bark!')");
-
-	//std::cout << std::endl;
-
 	paradox::Paradox engine;
 	engine.run();
 

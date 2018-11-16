@@ -6,6 +6,9 @@
 #include <iostream>
 #include <sstream>
 
+// Sol
+//#include <sol/sol.hpp>
+
 // Paradox
 #include <Window/WindowManager.hpp>
 #include <Editor/Resource/EditorResourceManager.hpp>
@@ -75,6 +78,14 @@ namespace paradox
 		EditorResourceManager::getInstance()->init();
 		DockingManager::getInstance()->init();
 		MenuManager::getInstance()->init();
+
+		// Need to preload the script path (../Scripts) or something beforehand?
+		// Read lua script for test
+		//sol::state lua;
+		//lua.open_libraries(sol::lib::base, sol::lib::package);
+
+		//// Execute file
+		//lua.script_file("project/Assets/Scripts/main.lua");
 	}
 
 	Paradox::~Paradox()
