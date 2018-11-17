@@ -15,7 +15,6 @@ namespace paradox
 		SceneDock();
 		~SceneDock() = default;
 
-		void pollEvents() override;
 		void update() override;
 		void draw(const sf::Color& color) override;
 
@@ -24,7 +23,6 @@ namespace paradox
 		sf::View m_sceneView;
 		sf::Vector2f m_currentMousePos;
 		sf::Vector2f m_previousMousePos;
-		sf::Vector2f m_relativeMousePos;
 		bool m_isFocused;
 	};
 }

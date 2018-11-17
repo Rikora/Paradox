@@ -72,6 +72,7 @@ namespace paradox
 		// Init GUI and editor systems
 		ImGui::SFML::Init(*window);
 
+		EditorInputManager::getInstance()->init();
 		EditorResourceManager::getInstance()->init();
 		DockingManager::getInstance()->init();
 		MenuManager::getInstance()->init();
@@ -96,7 +97,7 @@ namespace paradox
 	{
 		sf::Clock clock;
 		sf::Clock guiClock;
-		auto window = WindowManager::getInstance()->getWindow();
+		const auto window = WindowManager::getInstance()->getWindow();
 
 		while (window->isOpen())
 		{
@@ -110,7 +111,7 @@ namespace paradox
 	void Paradox::pollEvents(sf::RenderWindow& window)
 	{
 		// Clear from previous actions
-		auto editorEvent = EditorInputManager::getInstance();
+		const auto editorEvent = EditorInputManager::getInstance();
 		editorEvent->clearEvents();
 
 		sf::Event event;
@@ -120,9 +121,6 @@ namespace paradox
 			ImGui::SFML::ProcessEvent(event);
 			editorEvent->pushEvent(event);
 		}
-
-		MenuManager::getInstance()->pollEvents();
-		DockingManager::getInstance()->pollEvents();
 	}
 
 	void Paradox::update(sf::Time dt)

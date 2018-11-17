@@ -8,7 +8,7 @@ namespace paradox
 	public:
 		virtual ~Menu() {}
 
-		virtual void pollEvents() = 0;
+		virtual void update() = 0;
 		virtual void draw() = 0;
 	};
 }

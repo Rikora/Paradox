@@ -14,20 +14,13 @@ namespace paradox
 		m_menus.insert(std::make_pair(MenuID::File, std::make_unique<FileMenu>()));
 	}
 
-	void MenuManager::pollEvents()
-	{
-		for (const auto& menu : m_menus)
-		{
-			menu.second->pollEvents();
-		}
-	}
-
 	void MenuManager::draw()
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
 			for (const auto& menu : m_menus)
 			{
+				menu.second->update();
 				menu.second->draw();
 			}
 

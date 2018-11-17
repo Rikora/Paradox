@@ -33,14 +33,6 @@ namespace paradox
 		m_docks.insert(std::make_pair(DockID::Console, std::make_unique<ConsoleDock>()));
 	}
 
-	void DockingManager::pollEvents()
-	{
-		for (const auto& dock : m_docks)
-		{
-			dock.second->pollEvents();
-		}
-	}
-
 	void DockingManager::draw()
 	{
 		// Docking system

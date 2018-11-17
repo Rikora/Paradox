@@ -20,14 +20,9 @@ namespace paradox
 	{
 		// Set textures for icons
 		auto editorResource = EditorResourceManager::getInstance();
-		auto editorEvent = EditorInputManager::getInstance();
 
 		m_folderIcon.setTexture(editorResource->getTexture(EditorResource::FolderIcon));
-		m_luaIcon.setTexture(editorResource->getTexture(EditorResource::LuaIcon));
-
-		// Add input events
-		editorEvent->addEvent(EditorEvent::Delete, thor::Action(sf::Keyboard::Delete));
-		editorEvent->addEvent(EditorEvent::RightMousePress, thor::Action(sf::Mouse::Right, thor::Action::PressOnce));
+		m_luaIcon.setTexture(editorResource->getTexture(EditorResource::LuaIcon));	
 	}
 
 	void ProjectDock::draw()

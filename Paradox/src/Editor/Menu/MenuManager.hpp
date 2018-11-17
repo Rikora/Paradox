@@ -27,7 +27,6 @@ namespace paradox
 
 	public:
 		void init();
-		void pollEvents();
 		void draw();
 		static MenuManager* getInstance();
 

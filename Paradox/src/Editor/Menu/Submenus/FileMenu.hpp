@@ -8,10 +8,9 @@ namespace paradox
 	class FileMenu final : public Menu
 	{
 	public:
-		FileMenu();
 		~FileMenu() = default;
 
-		void pollEvents() override;
+		void update() override;
 		void draw() override;
 
 	private:

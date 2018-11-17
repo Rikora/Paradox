@@ -20,26 +20,7 @@ using namespace nlohmann;
 
 namespace paradox 
 {
-	FileMenu::FileMenu()
-	{
-		// Add input events
-		auto editorEvent = EditorInputManager::getInstance();
-
-		const thor::Action ctrl(sf::Keyboard::LControl, thor::Action::Hold);
-		const thor::Action alt(sf::Keyboard::LAlt, thor::Action::Hold);
-		const thor::Action esc(sf::Keyboard::Escape, thor::Action::PressOnce);
-		const thor::Action n(sf::Keyboard::N, thor::Action::PressOnce);
-		const thor::Action o(sf::Keyboard::O, thor::Action::PressOnce);
-		const thor::Action s(sf::Keyboard::S, thor::Action::PressOnce);
-
-		editorEvent->addEvent(EditorEvent::NewScene, ctrl && n);
-		editorEvent->addEvent(EditorEvent::OpenScene, ctrl && o);
-		editorEvent->addEvent(EditorEvent::SaveScene, ctrl && s);
-		editorEvent->addEvent(EditorEvent::SaveSceneAs, ctrl && alt && s);
-		editorEvent->addEvent(EditorEvent::Exit, thor::Action(sf::Event::Closed) || esc);
-	}
-
-	void FileMenu::pollEvents()
+	void FileMenu::update()
 	{
 		auto editorEvent = EditorInputManager::getInstance();
 

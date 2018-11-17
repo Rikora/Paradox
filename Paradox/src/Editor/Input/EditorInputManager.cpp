@@ -2,11 +2,30 @@
 
 namespace paradox
 {
-	// TODO: add all events here instead for convenience
-
-	void EditorInputManager::addEvent(EditorEvent eventType, const thor::Action& action)
+	void EditorInputManager::init()
 	{
-		m_actions[eventType] = action;
+		// Add editor events
+		const thor::Action ctrl(sf::Keyboard::LControl, thor::Action::Hold);
+		const thor::Action alt(sf::Keyboard::LAlt, thor::Action::Hold);
+		const thor::Action esc(sf::Keyboard::Escape, thor::Action::PressOnce);
+		const thor::Action n(sf::Keyboard::N, thor::Action::PressOnce);
+		const thor::Action o(sf::Keyboard::O, thor::Action::PressOnce);
+		const thor::Action s(sf::Keyboard::S, thor::Action::PressOnce);
+		const thor::Action del(sf::Keyboard::Delete, thor::Action::PressOnce);
+		const thor::Action mouseRight(sf::Mouse::Right, thor::Action::PressOnce);
+		const thor::Action mouseMiddle(sf::Mouse::Middle, thor::Action::PressOnce);
+		const thor::Action mouseMiddleHold(sf::Mouse::Middle, thor::Action::Hold);
+		const thor::Action closed(sf::Event::Closed);
+
+		addEvent(EditorEvent::NewScene, ctrl && n);
+		addEvent(EditorEvent::OpenScene, ctrl && o);
+		addEvent(EditorEvent::SaveScene, ctrl && s);
+		addEvent(EditorEvent::SaveSceneAs, ctrl && alt && s);
+		addEvent(EditorEvent::Exit, closed || esc);
+		addEvent(EditorEvent::Delete, del);
+		addEvent(EditorEvent::RightMousePress, mouseRight);
+		addEvent(EditorEvent::MiddleMousePress, mouseMiddle);
+		addEvent(EditorEvent::MouseStrafing, mouseMiddleHold);
 	}
 
 	void EditorInputManager::clearEvents()
@@ -29,5 +48,10 @@ namespace paradox
 		static EditorInputManager instance;
 
 		return &instance;
+	}
+
+	void EditorInputManager::addEvent(EditorEvent eventType, const thor::Action& action)
+	{
+		m_actions[eventType] = action;
 	}
 }
