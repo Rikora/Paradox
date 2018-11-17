@@ -141,7 +141,7 @@ namespace paradox
 	void Paradox::render(sf::RenderWindow& window)
 	{
 		window.setTitle(m_engineTitle + " - " + SceneManager::getInstance()->getSceneName());
-		window.clear();
+		window.clear(sf::Color(20, 20, 20));
 
 		// Render GUI in the application window
 		ImGui::SFML::Render(window);

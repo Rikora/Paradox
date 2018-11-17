@@ -18,6 +18,13 @@ namespace paradox
 {
 	void DockingManager::init()
 	{
+		// Init styling
+		ImGuiStyle* style = &ImGui::GetStyle();
+		ImVec4 background = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
+
+		style->Colors[ImGuiCol_WindowBg] = background;
+		style->Colors[ImGuiCol_PopupBg] = background;
+
 		// Init docking system
 		ImGui::InitDock();
 
@@ -38,14 +45,15 @@ namespace paradox
 	void DockingManager::draw()
 	{
 		// Docking system
-		ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize); // Change this when menu bar is added
+		const auto verticalOffset = sf::Vector2f(0.f, 50.f);
+		const auto displaySize = sf::Vector2f(ImGui::GetIO().DisplaySize) - verticalOffset;
+		ImGui::SetNextWindowSize(displaySize); // Change this when menu bar is added
 		const ImGuiWindowFlags flags = (ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
 			ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings |
 			ImGuiWindowFlags_NoTitleBar);
-		const float oldWindowRounding = ImGui::GetStyle().WindowRounding; 
 		const bool visible = ImGui::Begin("Docking system", nullptr, ImVec2(0, 0), 1.f, flags);
-		ImGui::GetStyle().WindowRounding = oldWindowRounding;
-		ImGui::SetWindowPos(ImVec2(0, 10));
+		ImGui::GetStyle().WindowRounding = 0.f;
+		ImGui::SetWindowPos(verticalOffset);
 
 		if (visible)
 		{

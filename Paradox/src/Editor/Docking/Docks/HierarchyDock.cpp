@@ -11,6 +11,7 @@ namespace paradox
 	HierarchyDock::HierarchyDock() :
 	m_selected(false)
 	{
+		
 	}
 
 	void HierarchyDock::update()
