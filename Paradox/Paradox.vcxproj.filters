@@ -78,6 +78,9 @@
     <ClCompile Include="src\Editor\Console\DebugLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\Docking\Docks\HierarchyDock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Paradox.hpp">
@@ -150,6 +153,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\Console\DebugLog.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\Docking\Docks\HierarchyDock.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,7 @@
 #include <Editor/Docking/DockingManager.hpp>
 
 // Paradox
+#include <Editor/Docking/Docks/HierarchyDock.hpp>
 #include <Editor/Docking/Docks/ConsoleDock.hpp>
 #include <Editor/Docking/Docks/ProjectDock.hpp>
 #include <Editor/Docking/Docks/SceneDock.hpp>
@@ -31,6 +32,7 @@ namespace paradox
 		m_docks.insert(std::make_pair(DockID::Game, std::make_unique<GameDock>()));
 		m_docks.insert(std::make_pair(DockID::Project, std::make_unique<ProjectDock>()));
 		m_docks.insert(std::make_pair(DockID::Console, std::make_unique<ConsoleDock>()));
+		m_docks.insert(std::make_pair(DockID::Hierarchy, std::make_unique<HierarchyDock>()));
 	}
 
 	void DockingManager::draw()
@@ -74,6 +76,10 @@ namespace paradox
 
 			if (ImGui::BeginDock("Hierarchy"))
 			{
+				const auto dock = m_docks.find(DockID::Hierarchy);
+
+				dock->second->update();
+				dock->second->draw();
 			}
 			ImGui::EndDock();
 

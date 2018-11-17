@@ -7,11 +7,11 @@
 #include <sstream>
 
 // Paradox
-#include <Window/WindowManager.hpp>
 #include <Editor/Resource/EditorResourceManager.hpp>
 #include <Editor/Docking/DockingManager.hpp>
 #include <Editor/Menu/MenuManager.hpp>
 #include <Editor/Input/EditorInputManager.hpp>
+#include <Window/WindowManager.hpp>
 #include <System/Scene/SceneManager.hpp>
 
 // ImGui

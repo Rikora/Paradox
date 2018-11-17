@@ -25,11 +25,6 @@ namespace paradox
 		m_luaIcon.setTexture(editorResource->getTexture(EditorResource::LuaIcon));	
 	}
 
-	void ProjectDock::draw()
-	{
-		listProjectDirectory(m_projectPath);
-	}
-
 	void ProjectDock::update()
 	{
 		if (ImGui::IsMouseHoveringWindow())
@@ -41,7 +36,7 @@ namespace paradox
 					if (fs::exists(m_selectedNode))
 					{
 						fs::remove_all(m_selectedNode);
-						deselect();	
+						deselect();
 					}
 				}
 			}
@@ -57,6 +52,11 @@ namespace paradox
 		}
 
 		projectPopup();
+	}
+
+	void ProjectDock::draw()
+	{
+		listProjectDirectory(m_projectPath);
 	}
 
 	void ProjectDock::setProjectPath(const std::string& path)

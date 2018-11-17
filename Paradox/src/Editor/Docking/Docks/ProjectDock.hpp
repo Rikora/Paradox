@@ -19,8 +19,8 @@ namespace paradox
 		ProjectDock();
 		~ProjectDock() = default;
 
-		void draw() override;
 		void update() override;
+		void draw() override;
 		void setProjectPath(const std::string& path);
 		std::string getProjectPath() const;
 

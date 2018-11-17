@@ -14,7 +14,8 @@ namespace paradox
 		Scene,
 		Game,
 		Project,
-		Console
+		Console,
+		Hierarchy
 	};
 
 	// Singleton instance
