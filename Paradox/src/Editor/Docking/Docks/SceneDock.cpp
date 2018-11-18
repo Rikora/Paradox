@@ -1,8 +1,5 @@
 #include <Editor/Docking/Docks/SceneDock.hpp>
 
-// C++
-#include <iostream>
-
 // Paradox
 #include <Editor/Input/EditorInputManager.hpp>
 #include <System/Scene/SceneManager.hpp>
@@ -92,8 +89,7 @@ namespace paradox
 		// Make sure the grid expands the whole scene window
 		if (remainder != 0)
 		{
-			size = size + multiple - remainder;
-			m_verticalLines.resize(size + multiple);
+			m_verticalLines.resize(size + (multiple * multiple) - remainder);
 		}
 		else
 		{
@@ -105,7 +101,7 @@ namespace paradox
 		{
 			m_verticalLines[i] = sf::Vertex(sf::Vector2f(-m_sceneView.getCenter().x, static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y - tileSize)),
 				sf::Color(100, 100, 100));
-			m_verticalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(m_sceneWindow.getSize().x), static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y - tileSize)),
+			m_verticalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(m_sceneWindow.getSize().x) - m_sceneView.getCenter().x, static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y - tileSize)),
 				sf::Color(75, 75, 75));
 		}
 
@@ -117,8 +113,7 @@ namespace paradox
 		// Make sure the grid expands the whole scene window
 		if (remainder != 0)
 		{
-			size = size + multiple - remainder;
-			m_horizontalLines.resize(size + multiple);
+			m_horizontalLines.resize(size + (multiple * multiple) - remainder);
 		}
 		else
 		{
@@ -129,7 +124,7 @@ namespace paradox
 		{
 			m_horizontalLines[i] = sf::Vertex(sf::Vector2f(tileSize - m_sceneView.getCenter().x, static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y)),
 				sf::Color(75, 75, 75));
-			m_horizontalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(tileSize - m_sceneView.getCenter().x), -m_sceneView.getCenter().y),
+			m_horizontalLines[i + 1] = sf::Vertex(sf::Vector2f(tileSize - m_sceneView.getCenter().x, -m_sceneView.getCenter().y),
 				sf::Color(100, 100, 100));
 		}
 	}
