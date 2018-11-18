@@ -5,6 +5,7 @@
 
 // SFML
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 namespace paradox
 {
@@ -23,6 +24,9 @@ namespace paradox
 		void render(sf::RenderWindow& window);
 
 		std::string m_engineTitle;
+		sf::Sprite m_undoIcon;
+		sf::Sprite m_redoIcon;
+		sf::Sprite m_saveIcon;
 		//sol::state m_lua;
 	};
 }

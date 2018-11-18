@@ -55,7 +55,7 @@ namespace paradox
 
 	void SceneDock::draw(const sf::Color& color)
 	{
-		m_sceneWindow.clear(color);
+		m_sceneWindow.clear(sf::Color(60, 60, 60));
 		m_sceneWindow.setView(m_sceneView);
 
 		// Render to scene window
@@ -64,5 +64,28 @@ namespace paradox
 		m_sceneWindow.display();
 
 		ImGui::Image(m_sceneWindow.getTexture());
+
+		//auto draw_list = ImGui::GetWindowDrawList();
+		//const sf::Vector2f tileSize(16.f, 16.f);
+		//const sf::Vector2f tilesetImagePos = sf::Vector2f(ImGui::GetWindowPos()) + sf::Vector2f(ImGui::GetCursorScreenPos().x, 0.f);
+
+		//const auto xTiles = m_sceneWindow.getTexture().getSize().x / static_cast<unsigned>(tileSize.x);
+		//const auto yTiles = m_sceneWindow.getTexture().getSize().y / static_cast<unsigned>(tileSize.y);
+
+		//// Draw horizontal lines
+		//for (unsigned x = 0; x < xTiles + 1; ++x)
+		//{
+		//	draw_list->AddLine(ImVec2(tilesetImagePos.x + x * tileSize.x, tilesetImagePos.y),
+		//		ImVec2(tilesetImagePos.x + x * tileSize.x, tilesetImagePos.y + yTiles * tileSize.y),
+		//		ImColor(130, 130, 130));
+		//}
+
+		//// Draw vertical lines
+		//for (unsigned y = 0; y < yTiles + 1; ++y)
+		//{
+		//	draw_list->AddLine(ImVec2(tilesetImagePos.x, tilesetImagePos.y + y * tileSize.y),
+		//		ImVec2(tilesetImagePos.x + xTiles * tileSize.x, tilesetImagePos.y + y * tileSize.y),
+		//		ImColor(100, 100, 100));
+		//}
 	}
 }

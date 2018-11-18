@@ -6,6 +6,9 @@ namespace paradox
 	enum class EditorResource
 	{
 		FolderIcon,
-		LuaIcon
+		LuaIcon,
+		UndoIcon,
+		RedoIcon,
+		SaveIcon
 	};
 }
