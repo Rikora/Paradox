@@ -11,7 +11,8 @@
 namespace paradox
 {
 	SceneDock::SceneDock() :
-	m_isFocused(false)
+	m_isFocused(false),
+	m_tileSize(16.f)
 	{
 	}
 
@@ -50,6 +51,50 @@ namespace paradox
 			m_sceneWindow.create(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y));
 			m_sceneView.setCenter({ size.x / 2.f, size.y / 2.f });
 			m_sceneView.setSize({ size.x, size.y });
+		
+			// Vertical grid lines
+			const auto multiple = 2;
+			auto size = static_cast<unsigned>(std::round(m_sceneWindow.getSize().y / m_tileSize) * multiple);
+			auto remainder = size % multiple;
+
+			if (remainder != 0)
+			{
+				size = size + multiple - remainder;
+				m_verticalLines.resize(size + multiple);
+			}
+			else
+			{
+				m_verticalLines.resize(size + multiple); 
+			}
+
+			float tileSize = 0.f;
+			for (unsigned i = 0; i < m_verticalLines.size(); i += 2, tileSize += m_tileSize)
+			{
+				m_verticalLines[i] = sf::Vertex(sf::Vector2f(0.f, static_cast<float>(m_sceneWindow.getSize().y - tileSize)), sf::Color(100, 100, 100));
+				m_verticalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(m_sceneWindow.getSize().x), static_cast<float>(m_sceneWindow.getSize().y - tileSize)), 
+					sf::Color(75, 75, 75));
+			}
+
+			// Horizontal grid lines
+			tileSize = 0.f;
+			size = static_cast<unsigned>(std::round(m_sceneWindow.getSize().x / m_tileSize)) * multiple;
+			remainder = size % multiple;
+
+			if (remainder != 0)
+			{
+				size = size + multiple - remainder;
+				m_horizontalLines.resize(size + multiple);
+			}
+			else
+			{
+				m_horizontalLines.resize(size + multiple);
+			}
+
+			for (unsigned i = 0; i < m_horizontalLines.size(); i += 2, tileSize += m_tileSize)
+			{
+				m_horizontalLines[i] = sf::Vertex(sf::Vector2f(tileSize, static_cast<float>(m_sceneWindow.getSize().y)), sf::Color(75, 75, 75));
+				m_horizontalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(tileSize), 0.f), sf::Color(100, 100, 100));
+			}
 		}
 	}
 
@@ -57,6 +102,11 @@ namespace paradox
 	{
 		m_sceneWindow.clear(sf::Color(60, 60, 60));
 		m_sceneWindow.setView(m_sceneView);
+		
+		// TODO: store in a single vector instead
+		// Draw grid lines
+		m_sceneWindow.draw(m_verticalLines.data(), m_verticalLines.size(), sf::Lines);
+		m_sceneWindow.draw(m_horizontalLines.data(), m_horizontalLines.size(), sf::Lines);
 
 		// Render to scene window
 		SceneManager::getInstance()->draw(m_sceneWindow);
@@ -64,28 +114,5 @@ namespace paradox
 		m_sceneWindow.display();
 
 		ImGui::Image(m_sceneWindow.getTexture());
-
-		//auto draw_list = ImGui::GetWindowDrawList();
-		//const sf::Vector2f tileSize(16.f, 16.f);
-		//const sf::Vector2f tilesetImagePos = sf::Vector2f(ImGui::GetWindowPos()) + sf::Vector2f(ImGui::GetCursorScreenPos().x, 0.f);
-
-		//const auto xTiles = m_sceneWindow.getTexture().getSize().x / static_cast<unsigned>(tileSize.x);
-		//const auto yTiles = m_sceneWindow.getTexture().getSize().y / static_cast<unsigned>(tileSize.y);
-
-		//// Draw horizontal lines
-		//for (unsigned x = 0; x < xTiles + 1; ++x)
-		//{
-		//	draw_list->AddLine(ImVec2(tilesetImagePos.x + x * tileSize.x, tilesetImagePos.y),
-		//		ImVec2(tilesetImagePos.x + x * tileSize.x, tilesetImagePos.y + yTiles * tileSize.y),
-		//		ImColor(130, 130, 130));
-		//}
-
-		//// Draw vertical lines
-		//for (unsigned y = 0; y < yTiles + 1; ++y)
-		//{
-		//	draw_list->AddLine(ImVec2(tilesetImagePos.x, tilesetImagePos.y + y * tileSize.y),
-		//		ImVec2(tilesetImagePos.x + xTiles * tileSize.x, tilesetImagePos.y + y * tileSize.y),
-		//		ImColor(100, 100, 100));
-		//}
 	}
 }

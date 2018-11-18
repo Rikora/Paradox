@@ -23,6 +23,9 @@ namespace paradox
 		sf::View m_sceneView;
 		sf::Vector2f m_currentMousePos;
 		sf::Vector2f m_previousMousePos;
+		std::vector<sf::Vertex> m_verticalLines;
+		std::vector<sf::Vertex> m_horizontalLines;
+		float m_tileSize;
 		bool m_isFocused;
 	};
 }
