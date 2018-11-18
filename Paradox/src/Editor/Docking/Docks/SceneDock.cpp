@@ -1,5 +1,8 @@
 #include <Editor/Docking/Docks/SceneDock.hpp>
 
+// C++
+#include <iostream>
+
 // Paradox
 #include <Editor/Input/EditorInputManager.hpp>
 #include <System/Scene/SceneManager.hpp>
@@ -12,7 +15,7 @@ namespace paradox
 {
 	SceneDock::SceneDock() :
 	m_isFocused(false),
-	m_tileSize(16.f)
+	m_tileSize(32.f)
 	{
 	}
 
@@ -52,49 +55,8 @@ namespace paradox
 			m_sceneView.setCenter({ size.x / 2.f, size.y / 2.f });
 			m_sceneView.setSize({ size.x, size.y });
 		
-			// Vertical grid lines
-			const auto multiple = 2;
-			auto size = static_cast<unsigned>(std::round(m_sceneWindow.getSize().y / m_tileSize) * multiple);
-			auto remainder = size % multiple;
-
-			if (remainder != 0)
-			{
-				size = size + multiple - remainder;
-				m_verticalLines.resize(size + multiple);
-			}
-			else
-			{
-				m_verticalLines.resize(size + multiple); 
-			}
-
-			float tileSize = 0.f;
-			for (unsigned i = 0; i < m_verticalLines.size(); i += 2, tileSize += m_tileSize)
-			{
-				m_verticalLines[i] = sf::Vertex(sf::Vector2f(0.f, static_cast<float>(m_sceneWindow.getSize().y - tileSize)), sf::Color(100, 100, 100));
-				m_verticalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(m_sceneWindow.getSize().x), static_cast<float>(m_sceneWindow.getSize().y - tileSize)), 
-					sf::Color(75, 75, 75));
-			}
-
-			// Horizontal grid lines
-			tileSize = 0.f;
-			size = static_cast<unsigned>(std::round(m_sceneWindow.getSize().x / m_tileSize)) * multiple;
-			remainder = size % multiple;
-
-			if (remainder != 0)
-			{
-				size = size + multiple - remainder;
-				m_horizontalLines.resize(size + multiple);
-			}
-			else
-			{
-				m_horizontalLines.resize(size + multiple);
-			}
-
-			for (unsigned i = 0; i < m_horizontalLines.size(); i += 2, tileSize += m_tileSize)
-			{
-				m_horizontalLines[i] = sf::Vertex(sf::Vector2f(tileSize, static_cast<float>(m_sceneWindow.getSize().y)), sf::Color(75, 75, 75));
-				m_horizontalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(tileSize), 0.f), sf::Color(100, 100, 100));
-			}
+			// Create the scene grid according to the current view and window size
+			createGrid();
 		}
 	}
 
@@ -104,9 +66,13 @@ namespace paradox
 		m_sceneWindow.setView(m_sceneView);
 		
 		// TODO: store in a single vector instead
+		// Move the grid with the view
+		sf::Transform viewTransform;
+		viewTransform.translate(m_sceneView.getCenter());
+
 		// Draw grid lines
-		m_sceneWindow.draw(m_verticalLines.data(), m_verticalLines.size(), sf::Lines);
-		m_sceneWindow.draw(m_horizontalLines.data(), m_horizontalLines.size(), sf::Lines);
+		m_sceneWindow.draw(m_verticalLines.data(), m_verticalLines.size(), sf::Lines, viewTransform);
+		m_sceneWindow.draw(m_horizontalLines.data(), m_horizontalLines.size(), sf::Lines, viewTransform);
 
 		// Render to scene window
 		SceneManager::getInstance()->draw(m_sceneWindow);
@@ -114,5 +80,57 @@ namespace paradox
 		m_sceneWindow.display();
 
 		ImGui::Image(m_sceneWindow.getTexture());
+	}
+
+	void SceneDock::createGrid()
+	{
+		// Vertical grid lines
+		const auto multiple = 2;
+		auto size = static_cast<unsigned>(std::round(m_sceneWindow.getSize().y / m_tileSize) * multiple);
+		auto remainder = size % multiple;
+
+		// Make sure the grid expands the whole scene window
+		if (remainder != 0)
+		{
+			size = size + multiple - remainder;
+			m_verticalLines.resize(size + multiple);
+		}
+		else
+		{
+			m_verticalLines.resize(size + multiple);
+		}
+
+		float tileSize = 0.f;
+		for (unsigned i = 0; i < m_verticalLines.size(); i += 2, tileSize += m_tileSize)
+		{
+			m_verticalLines[i] = sf::Vertex(sf::Vector2f(-m_sceneView.getCenter().x, static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y - tileSize)),
+				sf::Color(100, 100, 100));
+			m_verticalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(m_sceneWindow.getSize().x), static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y - tileSize)),
+				sf::Color(75, 75, 75));
+		}
+
+		// Horizontal grid lines
+		tileSize = 0.f;
+		size = static_cast<unsigned>(std::round(m_sceneWindow.getSize().x / m_tileSize)) * multiple;
+		remainder = size % multiple;
+
+		// Make sure the grid expands the whole scene window
+		if (remainder != 0)
+		{
+			size = size + multiple - remainder;
+			m_horizontalLines.resize(size + multiple);
+		}
+		else
+		{
+			m_horizontalLines.resize(size + multiple);
+		}
+
+		for (unsigned i = 0; i < m_horizontalLines.size(); i += 2, tileSize += m_tileSize)
+		{
+			m_horizontalLines[i] = sf::Vertex(sf::Vector2f(tileSize - m_sceneView.getCenter().x, static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y)),
+				sf::Color(75, 75, 75));
+			m_horizontalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(tileSize - m_sceneView.getCenter().x), -m_sceneView.getCenter().y),
+				sf::Color(100, 100, 100));
+		}
 	}
 }

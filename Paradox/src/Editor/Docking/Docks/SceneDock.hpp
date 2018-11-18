@@ -19,6 +19,8 @@ namespace paradox
 		void draw(const sf::Color& color) override;
 
 	private:
+		void createGrid();
+
 		sf::RenderTexture m_sceneWindow;
 		sf::View m_sceneView;
 		sf::Vector2f m_currentMousePos;
