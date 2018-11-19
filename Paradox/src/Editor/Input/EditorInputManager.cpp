@@ -16,6 +16,7 @@ namespace paradox
 		const thor::Action mouseMiddle(sf::Mouse::Middle, thor::Action::PressOnce);
 		const thor::Action mouseMiddleHold(sf::Mouse::Middle, thor::Action::Hold);
 		const thor::Action closed(sf::Event::Closed);
+		const thor::Action scroll(sf::Event::MouseWheelScrolled);
 
 		addEvent(EditorEvent::NewScene, ctrl && n);
 		addEvent(EditorEvent::OpenScene, ctrl && o);
@@ -26,6 +27,7 @@ namespace paradox
 		addEvent(EditorEvent::RightMousePress, mouseRight);
 		addEvent(EditorEvent::MiddleMousePress, mouseMiddle);
 		addEvent(EditorEvent::MouseStrafing, mouseMiddleHold);
+		addEvent(EditorEvent::MouseScrollWheel, scroll);
 	}
 
 	void EditorInputManager::clearEvents()
@@ -35,12 +37,18 @@ namespace paradox
 
 	void EditorInputManager::pushEvent(const sf::Event& event)
 	{
+		m_event = event;
 		m_actions.pushEvent(event);
 	}
 
 	bool EditorInputManager::isActive(EditorEvent eventType)
 	{
 		return m_actions.isActive(eventType);
+	}
+
+	sf::Event* EditorInputManager::getEvent()
+	{
+		return &m_event;
 	}
 
 	EditorInputManager* EditorInputManager::getInstance()

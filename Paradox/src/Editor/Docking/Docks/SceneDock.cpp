@@ -1,5 +1,8 @@
 #include <Editor/Docking/Docks/SceneDock.hpp>
 
+// C++
+#include <iostream>
+
 // Paradox
 #include <Editor/Input/EditorInputManager.hpp>
 #include <System/Scene/SceneManager.hpp>
@@ -27,6 +30,39 @@ namespace paradox
 		{
 			const auto editorEvent = EditorInputManager::getInstance();
 
+			if (editorEvent->isActive(EditorEvent::MouseScrollWheel))
+			{
+				auto event = editorEvent->getEvent();
+
+				if (event != nullptr)
+				{
+					// TODO: set scroll limit for view
+					if (event->mouseWheelScroll.delta > 0)
+					{
+						m_sceneView.zoom(-0.9f);
+						m_sceneView.setCenter({ m_sceneView.getSize().x / 2.f, m_sceneView.getSize().y / 2.f });
+						//std::cout << m_sceneView.getCenter().x << ", " << m_sceneView.getCenter().y << std::endl;
+					}
+
+					if (event->mouseWheelScroll.delta < 0)
+					{
+						m_sceneView.zoom(1.1f);
+						m_sceneView.setCenter({ m_sceneView.getSize().x / 2.f, m_sceneView.getSize().y / 2.f });
+						//std::cout << m_sceneView.getSize().x << ", " << m_sceneView.getSize().y << std::endl;
+					}
+
+					// Check for negative view size on reverse zoom
+					if (std::signbit(m_sceneView.getSize().x) && std::signbit(m_sceneView.getSize().y))
+					{
+						createGrid(-m_sceneView.getSize(), -m_sceneView.getCenter());
+					}
+					else
+					{
+						createGrid(m_sceneView.getSize(), m_sceneView.getCenter());
+					}
+				}
+			}
+
 			// Get cursor start position
 			if (editorEvent->isActive(EditorEvent::MiddleMousePress))
 			{
@@ -49,11 +85,12 @@ namespace paradox
 		if (m_sceneWindow.getSize() != sf::Vector2u(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y)))
 		{
 			m_sceneWindow.create(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y));
+
+			// Need to check if the view size matches the window size?
 			m_sceneView.setCenter({ size.x / 2.f, size.y / 2.f });
 			m_sceneView.setSize({ size.x, size.y });
 		
-			// Create the scene grid according to the current view and window size
-			createGrid();
+			createGrid(m_sceneView.getSize(), m_sceneView.getCenter());
 		}
 	}
 
@@ -79,11 +116,11 @@ namespace paradox
 		ImGui::Image(m_sceneWindow.getTexture());
 	}
 
-	void SceneDock::createGrid()
-	{
+	void SceneDock::createGrid(const sf::Vector2f& viewSize, const sf::Vector2f& viewCenter)
+	{	
 		// Vertical grid lines
 		const auto multiple = 2;
-		auto size = static_cast<unsigned>(std::round(m_sceneWindow.getSize().y / m_tileSize) * multiple);
+		auto size = static_cast<unsigned>(std::round(viewSize.y / m_tileSize) * multiple);
 		auto remainder = size % multiple;
 
 		// Make sure the grid expands the whole scene window
@@ -99,15 +136,15 @@ namespace paradox
 		float tileSize = 0.f;
 		for (unsigned i = 0; i < m_verticalLines.size(); i += 2, tileSize += m_tileSize)
 		{
-			m_verticalLines[i] = sf::Vertex(sf::Vector2f(-m_sceneView.getCenter().x, static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y - tileSize)),
+			m_verticalLines[i] = sf::Vertex(sf::Vector2f(-viewCenter.x, static_cast<float>(-viewCenter.y + viewSize.y - tileSize)),
 				sf::Color(100, 100, 100));
-			m_verticalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(m_sceneWindow.getSize().x) - m_sceneView.getCenter().x, static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y - tileSize)),
+			m_verticalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(viewSize.x) - viewCenter.x, static_cast<float>(-viewCenter.y + viewSize.y - tileSize)),
 				sf::Color(75, 75, 75));
 		}
 
 		// Horizontal grid lines
 		tileSize = 0.f;
-		size = static_cast<unsigned>(std::round(m_sceneWindow.getSize().x / m_tileSize)) * multiple;
+		size = static_cast<unsigned>(std::round(viewSize.x / m_tileSize)) * multiple;
 		remainder = size % multiple;
 
 		// Make sure the grid expands the whole scene window
@@ -122,9 +159,9 @@ namespace paradox
 
 		for (unsigned i = 0; i < m_horizontalLines.size(); i += 2, tileSize += m_tileSize)
 		{
-			m_horizontalLines[i] = sf::Vertex(sf::Vector2f(tileSize - m_sceneView.getCenter().x, static_cast<float>(-m_sceneView.getCenter().y + m_sceneWindow.getSize().y)),
+			m_horizontalLines[i] = sf::Vertex(sf::Vector2f(tileSize - viewCenter.x, static_cast<float>(-viewCenter.y + viewSize.y)),
 				sf::Color(75, 75, 75));
-			m_horizontalLines[i + 1] = sf::Vertex(sf::Vector2f(tileSize - m_sceneView.getCenter().x, -m_sceneView.getCenter().y),
+			m_horizontalLines[i + 1] = sf::Vertex(sf::Vector2f(tileSize - viewCenter.x, -viewCenter.y),
 				sf::Color(100, 100, 100));
 		}
 	}

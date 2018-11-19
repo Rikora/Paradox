@@ -13,6 +13,7 @@ namespace paradox
 		Delete,
 		RightMousePress,
 		MiddleMousePress,
-		MouseStrafing
+		MouseStrafing,
+		MouseScrollWheel
 	};
 }
