@@ -3,6 +3,7 @@
 // Paradox
 #include <Editor/Menu/Submenus/BarMenu.hpp>
 #include <Editor/Menu/Submenus/FileMenu.hpp>
+#include <Editor/Menu/Submenus/ObjectMenu.hpp>
 
 // ImGui
 #include <imgui/imgui.h>
@@ -14,6 +15,7 @@ namespace paradox
 		// Add menus to the container
 		m_menus.insert(std::make_pair(MenuID::Bar, std::make_unique<BarMenu>()));
 		m_menus.insert(std::make_pair(MenuID::File, std::make_unique<FileMenu>()));
+		m_menus.insert(std::make_pair(MenuID::Object, std::make_unique<ObjectMenu>()));
 	}
 
 	void MenuManager::draw()

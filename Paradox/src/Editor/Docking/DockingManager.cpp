@@ -29,10 +29,10 @@ namespace paradox
 		ImGui::InitDock();
 
 		// Log test
-		auto console = DebugLog::getInstance();
+		/*auto console = DebugLog::getInstance();
 
 		console->log("Hello world");
-		console->log("Hello world again");
+		console->log("Hello world again");*/
 
 		// Add docks to the container
 		m_docks.insert(std::make_pair(DockID::Scene, std::make_unique<SceneDock>()));

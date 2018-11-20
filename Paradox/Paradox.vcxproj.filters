@@ -84,6 +84,9 @@
     <ClCompile Include="src\Editor\Menu\Submenus\BarMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\Menu\Submenus\ObjectMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine\Paradox.hpp">
@@ -162,6 +165,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\Menu\Submenus\BarMenu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\Menu\Submenus\ObjectMenu.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
