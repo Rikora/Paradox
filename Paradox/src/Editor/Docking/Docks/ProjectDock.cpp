@@ -15,14 +15,11 @@
 namespace paradox
 {
 	ProjectDock::ProjectDock() :
+	m_folderIcon(EditorResourceManager::getInstance()->getTexture(EditorResource::FolderIcon)),
+	m_luaIcon(EditorResourceManager::getInstance()->getTexture(EditorResource::LuaIcon)),
 	m_projectPath("E:/Paradox/Paradox/project/Assets"), // Hardcoded project path (will change when projects can be created)
 	m_selected(false)
 	{
-		// Set textures for icons
-		auto editorResource = EditorResourceManager::getInstance();
-
-		m_folderIcon.setTexture(editorResource->getTexture(EditorResource::FolderIcon));
-		m_luaIcon.setTexture(editorResource->getTexture(EditorResource::LuaIcon));	
 	}
 
 	void ProjectDock::update()

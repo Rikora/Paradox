@@ -64,7 +64,7 @@ namespace paradox
 				const auto dock = m_docks.find(DockID::Scene);
 
 				dock->second->update();
-				dock->second->draw(sf::Color::Black);
+				dock->second->draw(sf::Color(70, 70, 70));
 			}
 			ImGui::EndDock();
 

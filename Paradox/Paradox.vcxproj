@@ -159,6 +159,7 @@
     <ClCompile Include="src\Editor\Docking\Docks\ProjectDock.cpp" />
     <ClCompile Include="src\Editor\Docking\Docks\SceneDock.cpp" />
     <ClCompile Include="src\Editor\Input\EditorInputManager.cpp" />
+    <ClCompile Include="src\Editor\Menu\Submenus\BarMenu.cpp" />
     <ClCompile Include="src\Editor\Resource\EditorResourceManager.cpp" />
     <ClCompile Include="src\GUI\imgui_dock.cpp" />
     <ClCompile Include="src\Editor\Menu\MenuManager.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="src\Editor\Input\EditorInputManager.hpp" />
     <ClInclude Include="src\Editor\Menu\Menu.hpp" />
     <ClInclude Include="src\Editor\Menu\MenuManager.hpp" />
+    <ClInclude Include="src\Editor\Menu\Submenus\BarMenu.hpp" />
     <ClInclude Include="src\Editor\Menu\Submenus\FileMenu.hpp" />
     <ClInclude Include="src\Editor\Resource\EditorResource.hpp" />
     <ClInclude Include="src\Editor\Resource\EditorResourceManager.hpp" />

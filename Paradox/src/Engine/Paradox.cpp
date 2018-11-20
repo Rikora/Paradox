@@ -84,13 +84,6 @@ namespace paradox
 
 		//// Execute file
 		//m_lua.script_file("project/Assets/Scripts/main.lua");
-
-		// Icons
-		auto editorResource = EditorResourceManager::getInstance();
-
-		m_undoIcon.setTexture(editorResource->getTexture(EditorResource::UndoIcon));
-		m_redoIcon.setTexture(editorResource->getTexture(EditorResource::RedoIcon));
-		m_saveIcon.setTexture(editorResource->getTexture(EditorResource::SaveIcon));
 	}
 
 	Paradox::~Paradox()
@@ -140,26 +133,6 @@ namespace paradox
 	{
 		// Update GUI
 		ImGui::SFML::Update(window, dt);
-
-		// Icon bar below file menu
-		ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, 22));
-		ImGui::Begin("Overlay", NULL, ImVec2(0, 0), 0.0f, ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
-		
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(20, 20, 20, 0));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(50, 50, 50, 255));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(50, 50, 50, 0));
-
-		ImGui::ImageButton(m_saveIcon, 1, sf::Color(20, 20, 20));
-		ImGui::SameLine();
-
-		ImGui::ImageButton(m_undoIcon, 1, sf::Color(20, 20, 20));
-		ImGui::SameLine();
-
-		ImGui::ImageButton(m_redoIcon, 1, sf::Color(20, 20, 20));
-
-		ImGui::PopStyleColor(3);	
-		ImGui::End();
 
 		MenuManager::getInstance()->draw();
 		DockingManager::getInstance()->draw();

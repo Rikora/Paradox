@@ -27,6 +27,8 @@ namespace paradox
 		sf::Vector2f m_previousMousePos;
 		std::vector<sf::Vertex> m_verticalLines;
 		std::vector<sf::Vertex> m_horizontalLines;
+		sf::Color m_lightGrayGridColor;
+		sf::Color m_grayGridColor;
 		float m_tileSize;
 		bool m_isFocused;
 	};

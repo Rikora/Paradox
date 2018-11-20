@@ -11,6 +11,7 @@ namespace paradox
 {
 	enum class MenuID
 	{
+		Bar,
 		File
 	};
 

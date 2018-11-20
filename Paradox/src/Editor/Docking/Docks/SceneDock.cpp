@@ -15,7 +15,9 @@ namespace paradox
 {
 	SceneDock::SceneDock() :
 	m_isFocused(false),
-	m_tileSize(32.f)
+	m_tileSize(32.f),
+	m_lightGrayGridColor(100, 100, 100),
+	m_grayGridColor(75, 75, 75)
 	{
 	}
 
@@ -37,14 +39,14 @@ namespace paradox
 				if (event != nullptr)
 				{
 					// TODO: set scroll limit for view
-					if (event->mouseWheelScroll.delta > 0)
+					if (event->mouseWheelScroll.delta > 0.f)
 					{
 						m_sceneView.zoom(-0.9f);
 						m_sceneView.setCenter({ m_sceneView.getSize().x / 2.f, m_sceneView.getSize().y / 2.f });
 						//std::cout << m_sceneView.getCenter().x << ", " << m_sceneView.getCenter().y << std::endl;
 					}
 
-					if (event->mouseWheelScroll.delta < 0)
+					if (event->mouseWheelScroll.delta < 0.f)
 					{
 						m_sceneView.zoom(1.1f);
 						m_sceneView.setCenter({ m_sceneView.getSize().x / 2.f, m_sceneView.getSize().y / 2.f });
@@ -96,7 +98,7 @@ namespace paradox
 
 	void SceneDock::draw(const sf::Color& color)
 	{
-		m_sceneWindow.clear(sf::Color(60, 60, 60));
+		m_sceneWindow.clear(color);
 		m_sceneWindow.setView(m_sceneView);
 		
 		// TODO: store in a single vector instead
@@ -137,9 +139,9 @@ namespace paradox
 		for (unsigned i = 0; i < m_verticalLines.size(); i += 2, tileSize += m_tileSize)
 		{
 			m_verticalLines[i] = sf::Vertex(sf::Vector2f(-viewCenter.x, static_cast<float>(-viewCenter.y + viewSize.y - tileSize)),
-				sf::Color(100, 100, 100));
+				m_lightGrayGridColor);
 			m_verticalLines[i + 1] = sf::Vertex(sf::Vector2f(static_cast<float>(viewSize.x) - viewCenter.x, static_cast<float>(-viewCenter.y + viewSize.y - tileSize)),
-				sf::Color(75, 75, 75));
+				m_grayGridColor);
 		}
 
 		// Horizontal grid lines
@@ -160,9 +162,9 @@ namespace paradox
 		for (unsigned i = 0; i < m_horizontalLines.size(); i += 2, tileSize += m_tileSize)
 		{
 			m_horizontalLines[i] = sf::Vertex(sf::Vector2f(tileSize - viewCenter.x, static_cast<float>(-viewCenter.y + viewSize.y)),
-				sf::Color(75, 75, 75));
+				m_grayGridColor);
 			m_horizontalLines[i + 1] = sf::Vertex(sf::Vector2f(tileSize - viewCenter.x, -viewCenter.y),
-				sf::Color(100, 100, 100));
+				m_lightGrayGridColor);
 		}
 	}
 }
