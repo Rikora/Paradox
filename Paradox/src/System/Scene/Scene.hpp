@@ -21,8 +21,6 @@ namespace paradox
 		Scene();
 		~Scene();
 
-		// TODO: ability to add entities to the scene
-
 		void loadScene(const std::string& path);
 		void saveScene();
 		void unloadScene();
@@ -30,6 +28,7 @@ namespace paradox
 		void draw(sf::RenderTarget& target);
 		void setName(const std::string& name);
 		std::string getName() const;
+		entt::registry<unsigned>& getEntities();
 
 	private:
 		entt::registry<unsigned> m_entities;

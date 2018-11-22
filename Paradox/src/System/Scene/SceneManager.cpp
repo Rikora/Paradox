@@ -40,6 +40,11 @@ namespace paradox
 		return m_currentScene.getName();
 	}
 
+	entt::registry<unsigned>& SceneManager::getEntities()
+	{
+		return m_currentScene.getEntities();
+	}
+
 	SceneManager* SceneManager::getInstance()
 	{
 		static SceneManager instance;

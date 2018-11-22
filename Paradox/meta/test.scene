@@ -6,8 +6,8 @@
             },
             "shapeRenderer": {
                 "color": [
-                    0,
                     255,
+                    0,
                     0
                 ],
                 "radius": 5.0,

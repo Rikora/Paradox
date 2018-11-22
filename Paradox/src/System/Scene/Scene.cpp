@@ -34,10 +34,10 @@ namespace paradox
 		// Add a basic entity for test
 		/*auto entity = m_entities.create();
 		auto shape = std::make_unique<sf::CircleShape>(5.f);
-		shape->setFillColor(sf::Color::Green);
+		shape->setFillColor(sf::Color::Red);
 		m_entities.assign<Property>(entity, "gameObject");
-		m_entities.assign<ShapeRenderer>(entity, std::move(shape));
-		m_entities.assign<Transform>(entity, sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);*/
+		m_entities.assign<Transform>(entity, sf::Vector2f(200.f, 200.f), sf::Vector2f(1.f, 1.f), 0.f);
+		m_entities.assign<ShapeRenderer>(entity, std::move(shape));*/
 	}
 
 	Scene::~Scene()
@@ -94,7 +94,7 @@ namespace paradox
 					sf::Vector2f(input["scene"][i]["transform"]["scale"][0], input["scene"][i]["transform"]["scale"][1]),
 					input["scene"][i]["transform"]["rotation"]);
 
-				// ShapeRenderer
+				// Render shapes
 				if (input["scene"][i]["spriteRenderer"].is_object())
 				{
 					auto sprite = std::make_unique<sf::Sprite>(); // TODO: add texture here
@@ -138,7 +138,7 @@ namespace paradox
 
 	void Scene::saveScene()
 	{
-		// Dump scene fil
+		// Dump scene file
 		json output;
 
 		unsigned index = 0;
@@ -158,7 +158,7 @@ namespace paradox
 			output["scene"][index]["transform"]["scale"] = { transform.scale.x, transform.scale.y };
 			output["scene"][index]["transform"]["rotation"] = transform.rotation;
 
-			// Shapes
+			// Render shapes
 			if (m_entities.has<SpriteRenderer>(entity))
 			{
 				auto& spriteRenderer = m_entities.get<SpriteRenderer>(entity);
@@ -183,7 +183,6 @@ namespace paradox
 			}
 
 			index++;
-
 		});
 
 		std::ofstream o("meta/" + m_name); // Hardcoded meta folder
@@ -214,5 +213,10 @@ namespace paradox
 	std::string Scene::getName() const
 	{
 		return m_name;
+	}
+
+	entt::registry<unsigned>& Scene::getEntities()
+	{
+		return m_entities;
 	}
 }

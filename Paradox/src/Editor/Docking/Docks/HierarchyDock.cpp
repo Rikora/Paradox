@@ -1,7 +1,8 @@
 #include <Editor/Docking/Docks/HierarchyDock.hpp>
 
-// C++
-#include <string>
+// Paradox
+#include <System/Scene/SceneManager.hpp>
+#include <System/Component/Property.hpp>
 
 // ImGui
 #include <imgui/imgui.h>
@@ -10,8 +11,7 @@ namespace paradox
 {
 	HierarchyDock::HierarchyDock() :
 	m_selected(false)
-	{
-		
+	{		
 	}
 
 	void HierarchyDock::update()
@@ -20,10 +20,13 @@ namespace paradox
 
 	void HierarchyDock::draw()
 	{
-		for (unsigned i = 0; i < 5; ++i)
+		auto view = SceneManager::getInstance()->getEntities().view<Property>();
+
+		for (const auto& entity : view)
 		{
-			std::string t = "Node" + std::to_string(i);
-			ImGui::Selectable(t.c_str(), m_selected);
+			auto& property = view.get(entity);
+
+			ImGui::Selectable(property.name.c_str(), m_selected);
 		}
 	}
 }
