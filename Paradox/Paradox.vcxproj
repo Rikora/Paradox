@@ -196,6 +196,7 @@
     <ClInclude Include="src\Engine\Paradox.hpp" />
     <ClInclude Include="src\System\Component\Property.hpp" />
     <ClInclude Include="src\System\Component\ShapeRenderer.hpp" />
+    <ClInclude Include="src\System\Component\SpriteRenderer.hpp" />
     <ClInclude Include="src\System\Component\Transform.hpp" />
     <ClInclude Include="src\System\File\FileSystem.hpp" />
     <ClInclude Include="src\System\Logic\RenderSystem.hpp" />

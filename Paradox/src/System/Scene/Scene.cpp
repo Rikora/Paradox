@@ -15,6 +15,7 @@
 #include <System/Logic/RenderSystem.hpp>
 
 #include <System/Component/Property.hpp>
+#include <System/Component/SpriteRenderer.hpp>
 #include <System/Component/ShapeRenderer.hpp>
 #include <System/Component/Transform.hpp>
 
@@ -94,7 +95,24 @@ namespace paradox
 					input["scene"][i]["transform"]["rotation"]);
 
 				// ShapeRenderer
-				if (input["scene"][i]["shapeRenderer"].is_object())
+				if (input["scene"][i]["spriteRenderer"].is_object())
+				{
+					auto sprite = std::make_unique<sf::Sprite>(); // TODO: add texture here
+
+					sprite->setColor(
+							sf::Color(input["scene"][i]["spriteRenderer"]["color"][0],
+							input["scene"][i]["spriteRenderer"]["color"][1],
+							input["scene"][i]["spriteRenderer"]["color"][2]));
+
+					// Prevent transform glitch when loading a scene
+					auto transform = m_entities.get<Transform>(entity);
+					sprite->setPosition(transform.position);
+					sprite->setScale(transform.scale);
+					sprite->setRotation(transform.rotation);
+
+					m_entities.assign<SpriteRenderer>(entity, std::move(sprite));
+				}
+				else if (input["scene"][i]["shapeRenderer"].is_object())
 				{
 					if (input["scene"][i]["shapeRenderer"]["type"] == "Circle")
 					{
@@ -120,32 +138,37 @@ namespace paradox
 
 	void Scene::saveScene()
 	{
-		// Dump scene file
+		// Dump scene fil
 		json output;
 
 		unsigned index = 0;
 		output["size"] = m_entities.alive();
 
-		auto view = m_entities.view<Property, Transform, ShapeRenderer>(); // More components will follow here...
-
-		for (const auto& entity : view)
+		m_entities.each([this, &index, &output](const auto& entity) 
 		{
 			// Property
-			auto& property = view.get<Property>(entity);
+			auto& property = m_entities.get<Property>(entity);
 
 			output["scene"][index]["property"]["name"] = property.name;
 
 			// Transform
-			auto& transform = view.get<Transform>(entity);
+			auto& transform = m_entities.get<Transform>(entity);
 
 			output["scene"][index]["transform"]["position"] = { transform.position.x, transform.position.y };
 			output["scene"][index]["transform"]["scale"] = { transform.scale.x, transform.scale.y };
 			output["scene"][index]["transform"]["rotation"] = transform.rotation;
 
-			// ShapeRenderer
-			if (m_entities.has<ShapeRenderer>(entity))
+			// Shapes
+			if (m_entities.has<SpriteRenderer>(entity))
 			{
-				auto& shapeRenderer = view.get<ShapeRenderer>(entity);
+				auto& spriteRenderer = m_entities.get<SpriteRenderer>(entity);
+
+				auto color = spriteRenderer.sprite->getColor();
+				output["scene"][index]["spriteRenderer"]["color"] = { color.r, color.g, color.b };
+			}
+			else if (m_entities.has<ShapeRenderer>(entity))
+			{
+				auto& shapeRenderer = m_entities.get<ShapeRenderer>(entity);
 
 				auto fillColor = shapeRenderer.shape->getFillColor();
 				output["scene"][index]["shapeRenderer"]["color"] = { fillColor.r, fillColor.g, fillColor.b };
@@ -157,10 +180,11 @@ namespace paradox
 					output["scene"][index]["shapeRenderer"]["type"] = "Circle";
 					output["scene"][index]["shapeRenderer"]["radius"] = circle->getRadius();
 				}
-			}	
+			}
 
 			index++;
-		}
+
+		});
 
 		std::ofstream o("meta/" + m_name); // Hardcoded meta folder
 		o << std::setw(4) << output << std::endl;

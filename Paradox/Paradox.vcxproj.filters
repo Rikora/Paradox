@@ -170,5 +170,8 @@
     <ClInclude Include="src\Editor\Menu\Submenus\ObjectMenu.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\System\Component\SpriteRenderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
