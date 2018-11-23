@@ -13,7 +13,7 @@ namespace paradox
 	{
 		if (ImGui::BeginMenu("Object"))
 		{
-			if (ImGui::MenuItem("Empty"))
+			if (ImGui::MenuItem("Create empty"))
 			{
 			}
 
