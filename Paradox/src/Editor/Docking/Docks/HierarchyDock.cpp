@@ -13,11 +13,8 @@ namespace paradox
 	m_selected(false)
 	{
 		// Layout for testing node system
-		m_nodes.push_back(Node("Jill"));
-		m_nodes.push_back(Node("Bill"));
-		m_nodes.push_back(Node("Ashley"));
-
-		m_nodes[2].children = {"Oskar", "Timmy"};
+		m_root.children = {Node("Jill"), Node("Bill"), Node("Ashley")};
+		m_root.children[0].children = { Node("Oskar"), Node("Timmy")};
 	}
 
 	void HierarchyDock::update()
@@ -26,7 +23,7 @@ namespace paradox
 
 	void HierarchyDock::draw()
 	{
-		listNodeTree();
+		listNodeTree(m_root);
 
 		/*auto view = SceneManager::getInstance()->getEntities().view<Property>();
 
@@ -38,15 +35,14 @@ namespace paradox
 		}*/
 	}
 
-	void HierarchyDock::listNodeTree()
+	void HierarchyDock::listNodeTree(const Node& node)
 	{
-		// TODO: implement depth first search approach
-		for (const auto& node : m_nodes)
+		// List parent and child nodes recursively
+		for (const auto& node : node.children)
 		{
-			// List the parent nodes
-			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow |
-				(m_selectedNode == node.name ? ImGuiTreeNodeFlags_Selected : 0);
-			ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 2.5f);
+			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | (node.children.empty() ? ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_OpenOnArrow) 
+				| (m_selectedNode == node.name ? ImGuiTreeNodeFlags_Selected : 0);
+			ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 1.5f);
 
 			bool nodeOpen = ImGui::TreeNodeEx(node.name.c_str(), nodeFlags);
 
@@ -57,25 +53,11 @@ namespace paradox
 
 			if (nodeOpen)
 			{
-				//listProjectDirectory(entry);
+				listNodeTree(node);
 				ImGui::TreePop();
 			}
 
 			ImGui::PopStyleVar();
-
-			// List children nodes
-			if(!node.children.empty())
-			{
-				for (const auto& child : node.children)
-				{
-					ImGui::Selectable(child.c_str(), (m_selectedNode == child ? true : false));
-
-					if (ImGui::IsItemClicked())
-					{
-						m_selectedNode = child;
-					}
-				}
-			}
 		}
 	}
 }
