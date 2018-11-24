@@ -13,7 +13,7 @@
 namespace paradox
 {
 	HierarchyDock::HierarchyDock() :
-	m_selected(false)
+	m_selectedNode(nullptr)
 	{
 		// Layout for testing node system
 		m_root.children = {Node("Jill"), Node("Bill"), Node("Ashley")};
@@ -39,22 +39,19 @@ namespace paradox
 
 	void HierarchyDock::listNodeTree(Node& node)
 	{
+		// Popup for node
+		nodePopup();
+
 		// List parent and child nodes recursively
 		for (unsigned i = 0; i < node.children.size(); ++i)
 		{
 			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | (node.children[i].children.empty() ? 
 				ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_OpenOnArrow)
-				| (m_selectedNode == node.children[i].name ? ImGuiTreeNodeFlags_Selected : 0);
+				| (m_selectedNode == &node.children[i] ? ImGuiTreeNodeFlags_Selected : 0);
 
 			ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 1.2f);
 
-			// Won't work in the end with ids as object can have same names (go with id for entities?)
 			bool nodeOpen = ImGui::TreeNodeEx(node.children[i].name.c_str(), nodeFlags);
-
-			if (ImGui::IsItemClicked())
-			{
-				m_selectedNode = node.children[i].name;
-			}
 
 			// Drag drop
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoPreviewTooltip))
@@ -65,10 +62,6 @@ namespace paradox
 				ImGui::EndDragDropSource();
 			}
 
-			// Rules:
-			// 1. parent nodes can't be dropped to other targets
-			// 2. child nodes can't be re-parented if it already has a parent
-			// 3. attachments for parents have to be broken if new attachments can be made
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("NODE_DROP"))
@@ -79,6 +72,10 @@ namespace paradox
 					// Target
 					if (m_sourcePointer->children[childIndex].children.empty() && m_sourcePointer->children[childIndex].parent == nullptr)
 					{
+						//Node temp = m_sourcePointer->children[childIndex];
+
+						// Parent seems to be wrong sometimes
+						// It it sometimes set to the root here or afterwards?
 						m_sourcePointer->children[childIndex].parent = &node.children[i];
 						node.children[i].children.push_back(m_sourcePointer->children[childIndex]);
 						m_sourcePointer->children.erase(m_sourcePointer->children.begin() + childIndex);
@@ -87,6 +84,20 @@ namespace paradox
 				}
 
 				ImGui::EndDragDropTarget();
+			}
+
+			// Left or right clicked on node
+			if (ImGui::IsItemClicked())
+			{
+				m_index = i;
+				m_selectedNode = &node.children[i];
+			}
+
+			if (ImGui::IsItemClicked(1))
+			{
+				m_index = i;
+				m_selectedNode = &node.children[i];
+				ImGui::OpenPopup("Node_Popup");
 			}
 
 			// Move to the next child
@@ -102,6 +113,38 @@ namespace paradox
 			}
 
 			ImGui::PopStyleVar();
+		}
+	}
+
+	void HierarchyDock::nodePopup()
+	{
+		ImGui::SetNextWindowSize(ImVec2(100, 0));
+		if (ImGui::BeginPopup("Node_Popup"))
+		{
+			ImGui::Text("Node");
+			ImGui::Separator();
+
+			// Add folder/file
+			if (ImGui::MenuItem("Delete"))
+			{
+			}
+
+			if (m_selectedNode->parent != nullptr)
+			{
+				if (ImGui::MenuItem("Detach"))
+				{
+					// The parent is wrong sometimes somehow?
+					// Move the child to the root node and remove from parent
+					std::cout << m_selectedNode->parent->name << std::endl;
+
+					/*Node temp = *m_selectedNode;
+					temp.parent = nullptr;
+					m_root.children.push_back(temp);
+					m_selectedNode->parent->children.erase(m_selectedNode->parent->children.begin() + m_index);*/
+				}
+			}
+
+			ImGui::EndPopup();
 		}
 	}
 }

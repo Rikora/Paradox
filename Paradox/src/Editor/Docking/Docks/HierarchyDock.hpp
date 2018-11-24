@@ -30,10 +30,11 @@ namespace paradox
 		};
 
 		void listNodeTree(Node& node);
+		void nodePopup();
 
-		bool m_selected;
 		Node m_root;
 		Node* m_sourcePointer;
-		std::string m_selectedNode;
+		Node* m_selectedNode;
+		unsigned int m_index;
 	};
 }
