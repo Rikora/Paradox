@@ -21,10 +21,11 @@ namespace paradox
 		// Basic layout for a node 
 		struct Node
 		{
-			Node() {}
-			Node(const std::string& name) : name(name) {}
+			Node() : parent(nullptr) {}
+			Node(const std::string& name) : name(name), parent(nullptr) {}
 
 			std::string name;
+			Node* parent;
 			std::vector<Node> children;
 		};
 

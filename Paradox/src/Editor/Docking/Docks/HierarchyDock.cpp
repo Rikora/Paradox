@@ -17,7 +17,6 @@ namespace paradox
 	{
 		// Layout for testing node system
 		m_root.children = {Node("Jill"), Node("Bill"), Node("Ashley")};
-		//m_root.children[0].children = { Node("Oskar"), Node("Timmy")};
 	}
 
 	void HierarchyDock::update()
@@ -40,8 +39,6 @@ namespace paradox
 
 	void HierarchyDock::listNodeTree(Node& node)
 	{
-		static unsigned index = 0;
-
 		// List parent and child nodes recursively
 		for (unsigned i = 0; i < node.children.size(); ++i)
 		{
@@ -49,7 +46,7 @@ namespace paradox
 				ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_OpenOnArrow)
 				| (m_selectedNode == node.children[i].name ? ImGuiTreeNodeFlags_Selected : 0);
 
-			ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 1.5f);
+			ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 1.2f);
 
 			// Won't work in the end with ids as object can have same names (go with id for entities?)
 			bool nodeOpen = ImGui::TreeNodeEx(node.children[i].name.c_str(), nodeFlags);
@@ -62,41 +59,45 @@ namespace paradox
 			// Drag drop
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoPreviewTooltip))
 			{
-				// Node
-				index = i;
+				// Store data about the source node
 				m_sourcePointer = &node;
-				ImGui::SetDragDropPayload("NODE_DROP", &node, sizeof(Node)); // Send index here instead
+				ImGui::SetDragDropPayload("NODE_DROP", &i, sizeof(unsigned int));
 				ImGui::EndDragDropSource();
 			}
 
-			// Note: parent nodes can't be dropped to other targets
+			// Rules:
+			// 1. parent nodes can't be dropped to other targets
+			// 2. child nodes can't be re-parented if it already has a parent
+			// 3. attachments for parents have to be broken if new attachments can be made
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("NODE_DROP"))
 				{
-					IM_ASSERT(payload->DataSize == sizeof(Node));
-					Node source = *(Node*)payload->Data;
+					IM_ASSERT(payload->DataSize == sizeof(unsigned int));
+					const auto childIndex = *(const unsigned int*)payload->Data;
 					
 					// Target
-					node.children[i].children.push_back(source.children[index].name);
-					m_sourcePointer->children.erase(m_sourcePointer->children.begin() + index); // Does not work entirely -> crash on descending index
-
-					//std::cout << node.name << std::endl;
-
-					/*int payload_n = *(const int*)payload->Data;
-					if (mode == Mode_Copy)
+					if (m_sourcePointer->children[childIndex].children.empty() && m_sourcePointer->children[childIndex].parent == nullptr)
 					{
-						names[n] = names[payload_n];
+						m_sourcePointer->children[childIndex].parent = &node.children[i];
+						node.children[i].children.push_back(m_sourcePointer->children[childIndex]);
+						m_sourcePointer->children.erase(m_sourcePointer->children.begin() + childIndex);
+						m_sourcePointer = nullptr;
 					}
-					*/
 				}
+
 				ImGui::EndDragDropTarget();
 			}
 
 			// Move to the next child
 			if (nodeOpen)
 			{
-				listNodeTree(node.children[i]);
+				// Prevent crash when index doesn't exist anymore upon removal
+				if (node.children.size() > i)
+				{
+					listNodeTree(node.children[i]);
+				}
+				
 				ImGui::TreePop();
 			}
 
