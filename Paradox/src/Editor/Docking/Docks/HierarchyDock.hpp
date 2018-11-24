@@ -28,10 +28,11 @@ namespace paradox
 			std::vector<Node> children;
 		};
 
-		void listNodeTree(const Node& node);
+		void listNodeTree(Node& node);
 
 		bool m_selected;
 		Node m_root;
+		Node* m_sourcePointer;
 		std::string m_selectedNode;
 	};
 }
