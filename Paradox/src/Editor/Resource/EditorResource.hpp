@@ -9,6 +9,8 @@ namespace paradox
 		LuaIcon,
 		UndoIcon,
 		RedoIcon,
-		SaveIcon
+		SaveIcon,
+		PlayIcon,
+		StopIcon
 	};
 }

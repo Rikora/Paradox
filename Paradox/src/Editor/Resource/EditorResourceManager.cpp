@@ -19,6 +19,8 @@ namespace paradox
 			m_textures.acquire(EditorResource::UndoIcon, thor::Resources::fromFile<sf::Texture>("res/Icons/undo.png"));
 			m_textures.acquire(EditorResource::RedoIcon, thor::Resources::fromFile<sf::Texture>("res/Icons/redo.png"));
 			m_textures.acquire(EditorResource::SaveIcon, thor::Resources::fromFile<sf::Texture>("res/Icons/save.png"));
+			m_textures.acquire(EditorResource::PlayIcon, thor::Resources::fromFile<sf::Texture>("res/Icons/play.png"));
+			m_textures.acquire(EditorResource::StopIcon, thor::Resources::fromFile<sf::Texture>("res/Icons/stop.png"));
 		}
 		catch (thor::ResourceLoadingException& e)
 		{

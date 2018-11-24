@@ -23,6 +23,8 @@ namespace paradox
 		sf::Sprite m_undoIcon;
 		sf::Sprite m_redoIcon;
 		sf::Sprite m_saveIcon;
+		sf::Sprite m_playIcon;
 		sf::Color m_grayBackgroundColor;
+		bool m_playing; // Temp variable for editor modes
 	};
 }

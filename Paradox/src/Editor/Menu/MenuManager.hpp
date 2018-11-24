@@ -13,7 +13,9 @@ namespace paradox
 	{
 		Bar,
 		File,
-		Object
+		Edit,
+		Object,
+		Tool
 	};
 
 	// Singleton instance

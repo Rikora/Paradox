@@ -65,12 +65,11 @@ namespace paradox
 				// Node
 				index = i;
 				m_sourcePointer = &node;
-				ImGui::SetDragDropPayload("NODE_DROP", &node, sizeof(Node)); // No way to send a pointer? 
+				ImGui::SetDragDropPayload("NODE_DROP", &node, sizeof(Node)); // Send index here instead
 				ImGui::EndDragDropSource();
 			}
 
-			// Parent nodes can't be dropped to other targets
-			// Pop id of the node which is going to be dropped
+			// Note: parent nodes can't be dropped to other targets
 			if (ImGui::BeginDragDropTarget())
 			{
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("NODE_DROP"))
@@ -80,7 +79,7 @@ namespace paradox
 					
 					// Target
 					node.children[i].children.push_back(source.children[index].name);
-					m_sourcePointer->children.erase(m_sourcePointer->children.begin() + index);
+					m_sourcePointer->children.erase(m_sourcePointer->children.begin() + index); // Does not work entirely -> crash on descending index
 
 					//std::cout << node.name << std::endl;
 

@@ -14,7 +14,9 @@ namespace paradox
 	m_undoIcon(EditorResourceManager::getInstance()->getTexture(EditorResource::UndoIcon)),
 	m_redoIcon(EditorResourceManager::getInstance()->getTexture(EditorResource::RedoIcon)),
 	m_saveIcon(EditorResourceManager::getInstance()->getTexture(EditorResource::SaveIcon)),
-	m_grayBackgroundColor(20, 20, 20)
+	m_playIcon(EditorResourceManager::getInstance()->getTexture(EditorResource::PlayIcon)),
+	m_grayBackgroundColor(20, 20, 20),
+	m_playing(true)
 	{
 	}
 
@@ -46,8 +48,29 @@ namespace paradox
 
 		// Redo editor steps
 		ImGui::ImageButton(m_redoIcon, 1, m_grayBackgroundColor);
+		ImGui::SameLine();
 
+		// Play game
+		// TODO: switch to game scene when play is pressed and regular scene when stop is pressed
+		ImGui::DrawLine(sf::Vector2f(0.f, -7.f), sf::Vector2f(0.f, 24.f), sf::Color(70, 70, 70));
+		ImGui::SameLine(0.f, 20.f);
+		if (ImGui::ImageButton(m_playIcon, 1, m_grayBackgroundColor))
+		{
+			m_playing = !m_playing;
+
+			m_playing ? m_playIcon.setTexture(EditorResourceManager::getInstance()->getTexture(EditorResource::PlayIcon)) :
+				m_playIcon.setTexture(EditorResourceManager::getInstance()->getTexture(EditorResource::StopIcon));
+		}
+		ImGui::SameLine(ImGui::GetIO().DisplaySize.x - 150);
+
+		// Done with color properties for image button
 		ImGui::PopStyleColor(3);
+
+		// Edit the layers and layout of the editor
+		ImGui::Button("Layers");
+		ImGui::SameLine();
+		ImGui::Button("Layout");
+
 		ImGui::End();
 	}
 
