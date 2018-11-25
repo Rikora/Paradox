@@ -16,7 +16,9 @@ namespace paradox
 	m_selectedNode(nullptr)
 	{
 		// Layout for testing node system
-		m_root.children = {Node("Jill"), Node("Bill"), Node("Ashley")};
+		m_root.children.push_back(std::make_unique<Node>("Jill"));
+		m_root.children.push_back(std::make_unique<Node>("Bill"));
+		m_root.children.push_back(std::make_unique<Node>("Ashley"));
 	}
 
 	void HierarchyDock::update()
@@ -45,13 +47,13 @@ namespace paradox
 		// List parent and child nodes recursively
 		for (unsigned i = 0; i < node.children.size(); ++i)
 		{
-			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | (node.children[i].children.empty() ? 
+			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | (node.children[i]->children.empty() ? 
 				ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_OpenOnArrow)
-				| (m_selectedNode == &node.children[i] ? ImGuiTreeNodeFlags_Selected : 0);
+				| (m_selectedNode == node.children[i].get() ? ImGuiTreeNodeFlags_Selected : 0);
 
 			ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 1.2f);
 
-			bool nodeOpen = ImGui::TreeNodeEx(node.children[i].name.c_str(), nodeFlags);
+			bool nodeOpen = ImGui::TreeNodeEx(node.children[i]->name.c_str(), nodeFlags);
 
 			// Drag drop
 			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceNoPreviewTooltip))
@@ -70,14 +72,10 @@ namespace paradox
 					const auto childIndex = *(const unsigned int*)payload->Data;
 					
 					// Target
-					if (m_sourcePointer->children[childIndex].children.empty() && m_sourcePointer->children[childIndex].parent == nullptr)
+					if (m_sourcePointer->children[childIndex]->children.empty() && m_sourcePointer->children[childIndex]->parent == nullptr)
 					{
-						//Node temp = m_sourcePointer->children[childIndex];
-
-						// Parent seems to be wrong sometimes
-						// It it sometimes set to the root here or afterwards?
-						m_sourcePointer->children[childIndex].parent = &node.children[i];
-						node.children[i].children.push_back(m_sourcePointer->children[childIndex]);
+						m_sourcePointer->children[childIndex]->parent = node.children[i].get();
+						node.children[i]->children.push_back(std::move(m_sourcePointer->children[childIndex]));
 						m_sourcePointer->children.erase(m_sourcePointer->children.begin() + childIndex);
 						m_sourcePointer = nullptr;
 					}
@@ -90,13 +88,13 @@ namespace paradox
 			if (ImGui::IsItemClicked())
 			{
 				m_index = i;
-				m_selectedNode = &node.children[i];
+				m_selectedNode = node.children[i].get();
 			}
 
 			if (ImGui::IsItemClicked(1))
 			{
 				m_index = i;
-				m_selectedNode = &node.children[i];
+				m_selectedNode = node.children[i].get();
 				ImGui::OpenPopup("Node_Popup");
 			}
 
@@ -106,7 +104,7 @@ namespace paradox
 				// Prevent crash when index doesn't exist anymore upon removal
 				if (node.children.size() > i)
 				{
-					listNodeTree(node.children[i]);
+					listNodeTree(*node.children[i].get());
 				}
 				
 				ImGui::TreePop();
@@ -124,23 +122,19 @@ namespace paradox
 			ImGui::Text("Node");
 			ImGui::Separator();
 
-			// Add folder/file
+			// Delete object
 			if (ImGui::MenuItem("Delete"))
 			{
 			}
 
+			// Detach the child from the parent and add it to the root node again
 			if (m_selectedNode->parent != nullptr)
 			{
 				if (ImGui::MenuItem("Detach"))
 				{
-					// The parent is wrong sometimes somehow?
-					// Move the child to the root node and remove from parent
-					std::cout << m_selectedNode->parent->name << std::endl;
-
-					/*Node temp = *m_selectedNode;
-					temp.parent = nullptr;
-					m_root.children.push_back(temp);
-					m_selectedNode->parent->children.erase(m_selectedNode->parent->children.begin() + m_index);*/
+					m_root.children.push_back(std::move(m_selectedNode->parent->children[m_index]));
+					m_selectedNode->parent->children.erase(m_selectedNode->parent->children.begin() + m_index);
+					m_selectedNode->parent = nullptr;
 				}
 			}
 

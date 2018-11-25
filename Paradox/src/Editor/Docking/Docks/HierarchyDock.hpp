@@ -1,6 +1,7 @@
 #pragma once
 
 // C++
+#include <memory>
 #include <vector>
 
 // Paradox
@@ -26,7 +27,7 @@ namespace paradox
 
 			std::string name;
 			Node* parent;
-			std::vector<Node> children;
+			std::vector<std::unique_ptr<Node>> children;
 		};
 
 		void listNodeTree(Node& node);
