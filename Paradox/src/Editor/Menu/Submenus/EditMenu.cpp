@@ -13,6 +13,14 @@ namespace paradox
 	{
 		if (ImGui::BeginMenu("Edit"))
 		{
+			if (ImGui::MenuItem("Undo", "Ctrl+Z"))
+			{
+			}
+
+			if (ImGui::MenuItem("Redo", "Ctrl+Y"))
+			{
+			}
+
 			ImGui::EndMenu();
 		}
 	}

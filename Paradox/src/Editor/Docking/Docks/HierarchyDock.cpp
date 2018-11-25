@@ -48,8 +48,8 @@ namespace paradox
 		for (unsigned i = 0; i < node.children.size(); ++i)
 		{
 			ImGuiTreeNodeFlags nodeFlags = ImGuiTreeNodeFlags_DefaultOpen | (node.children[i]->children.empty() ? 
-				ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_OpenOnArrow)
-				| (m_selectedNode == node.children[i].get() ? ImGuiTreeNodeFlags_Selected : 0);
+				ImGuiTreeNodeFlags_Leaf : ImGuiTreeNodeFlags_OpenOnArrow) | 
+				(m_selectedNode == node.children[i].get() ? ImGuiTreeNodeFlags_Selected : 0);
 
 			ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 1.2f);
 
